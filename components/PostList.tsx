@@ -63,17 +63,16 @@ export default function PostList({
           <article key={post.id}>
             <Link
               href={`/${post.slug}`}
-              className="group flex bg-white overflow-hidden hover:shadow-md transition-shadow duration-300"
-              style={{ borderRadius: '12px', minHeight: '300px' }}
+              className="group flex hover:shadow-md transition-shadow duration-300"
+              style={{ borderRadius: '12px', minHeight: '300px', overflow: 'hidden', backgroundColor: 'white' }}
             >
-              {/* Sol: Görsel */}
-              <div className="flex-shrink-0" style={{ width: '48%' }}>
+              {/* Sol: Görsel — border-radius yok, tam kenara yapışık */}
+              <div className="flex-shrink-0" style={{ width: '48%', overflow: 'hidden', borderRadius: 0 }}>
                 {post.featured_image ? (
                   <img
                     src={post.featured_image}
                     alt={post.title}
-                    className="w-full h-full object-cover"
-                    style={{ minHeight: '300px' }}
+                    style={{ display: 'block', width: '100%', height: '100%', minHeight: '300px', objectFit: 'cover', border: 'none', outline: 'none', borderRadius: 0, boxShadow: 'none' }}
                   />
                 ) : (
                   <div
