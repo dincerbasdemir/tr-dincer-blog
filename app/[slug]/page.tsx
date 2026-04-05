@@ -36,10 +36,10 @@ export default async function PostPage({ params }: { params: { slug: string } })
   if (!post) notFound()
 
   return (
-    <div className="mx-auto px-4 py-10" style={{ maxWidth: '925px' }}>
+    <div className="mx-auto px-4 py-10" style={{ maxWidth: '950px' }}>
       <article
         className="bg-white px-8 md:px-14 py-10"
-        style={{ borderRadius: '2px', border: '1px solid #ebebeb' }}
+        style={{ borderRadius: '2px', border: '1px solid #f2f2f2' }}
       >
         {/* Header */}
         <header className="mb-10">

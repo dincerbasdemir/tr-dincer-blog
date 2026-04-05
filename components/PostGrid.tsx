@@ -82,7 +82,7 @@ export default function PostGrid({
             <Link
               href={`/${post.slug}`}
               className="group flex gap-4 items-center bg-white hover:shadow-sm transition-all duration-200 p-4"
-              style={{ borderRadius: '2px', border: '1px solid #ebebeb' }}
+              style={{ borderRadius: '2px', border: '1px solid #f2f2f2' }}
             >
               {/* Thumbnail */}
               {post.featured_image ? (
@@ -90,14 +90,14 @@ export default function PostGrid({
                   src={post.featured_image}
                   alt={post.title}
                   className="flex-shrink-0 object-cover"
-                  style={{ width: '152px', height: '120px', borderRadius: '3px' }}
+                  style={{ width: '152px', height: '130px', borderRadius: '3px' }}
                 />
               ) : (
                 <div
                   className="flex-shrink-0"
                   style={{
                     width: '152px',
-                    height: '120px',
+                    height: '130px',
                     borderRadius: '3px',
                     backgroundColor: placeholderColor(post.title),
                   }}
@@ -105,12 +105,12 @@ export default function PostGrid({
               )}
 
               {/* Text */}
-              <div className="flex-1 min-w-0 flex flex-col gap-2" style={{ height: '120px', justifyContent: 'center' }}>
+              <div className="flex-1 min-w-0 flex flex-col gap-2" style={{ height: '130px', justifyContent: 'center' }}>
                 <h3
                   className="text-gray-900 group-hover:text-gray-500 transition-colors"
                   style={{
-                    fontSize: '17px',
-                    lineHeight: '24px',
+                    fontSize: '19px',
+                    lineHeight: '26px',
                     fontWeight: 700,
                     display: '-webkit-box',
                     WebkitLineClamp: 3,

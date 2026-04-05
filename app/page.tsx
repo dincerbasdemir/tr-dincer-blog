@@ -38,7 +38,7 @@ export default async function Home() {
         <Link href={`/${featured.slug}`} className="group block mb-6">
           <div
             className="bg-white hover:shadow-sm transition-all duration-200 p-6 md:p-8"
-            style={{ borderRadius: '2px', border: '1px solid #ebebeb' }}
+            style={{ borderRadius: '2px', border: '1px solid #f2f2f2' }}
           >
             <span className="inline-block text-[11px] font-semibold tracking-widest uppercase text-gray-400 mb-5">
               Son Yazı
@@ -64,7 +64,7 @@ export default async function Home() {
                 />
               )}
 
-              <div className="flex-1 min-w-0 flex flex-col justify-between" style={{ height: '160px' }}>
+              <div className="flex-1 min-w-0 flex flex-col gap-3">
                 <h2
                   className="text-gray-900 group-hover:text-gray-500 transition-colors text-balance"
                   style={{ fontSize: '28px', lineHeight: '36px', fontWeight: 700 }}
@@ -72,29 +72,28 @@ export default async function Home() {
                   {featured.title}
                 </h2>
 
-                <div>
-                  {featured.excerpt && (
-                    <p
-                      className="text-gray-500 mb-3"
-                      style={{
-                        fontSize: '14px',
-                        lineHeight: '20px',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden',
-                      }}
-                    >
-                      {featured.excerpt}
-                    </p>
-                  )}
-                  <div className="flex items-center gap-1.5 text-gray-400" style={{ fontSize: '12px' }}>
-                    <time dateTime={featured.published_at}>
-                      {format(new Date(featured.published_at), 'd MMMM yyyy', { locale: tr })}
-                    </time>
-                    {featured.reading_time && <><span>·</span><span>{featured.reading_time}</span></>}
-                    {featured.categories?.[0] && <><span>·</span><span>{featured.categories[0]}</span></>}
-                  </div>
+                {featured.excerpt && (
+                  <p
+                    className="text-gray-500"
+                    style={{
+                      fontSize: '15px',
+                      lineHeight: '22px',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 3,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {featured.excerpt}
+                  </p>
+                )}
+
+                <div className="flex items-center gap-1.5 text-gray-400" style={{ fontSize: '12px' }}>
+                  <time dateTime={featured.published_at}>
+                    {format(new Date(featured.published_at), 'd MMMM yyyy', { locale: tr })}
+                  </time>
+                  {featured.reading_time && <><span>·</span><span>{featured.reading_time}</span></>}
+                  {featured.categories?.[0] && <><span>·</span><span>{featured.categories[0]}</span></>}
                 </div>
               </div>
             </div>
