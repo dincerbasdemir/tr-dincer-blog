@@ -11,41 +11,58 @@
   }
   body {
     @apply font-sans;
+    background-color: #fbf9f8;
   }
 }
 
-/* ── Prose ── */
+/* ─── Prose — Editorial ─── */
 .prose {
   max-width: none;
   font-family: var(--font-jakarta), system-ui, sans-serif;
   font-size: 17px;
-  line-height: 30px;
-  color: #000;
+  line-height: 1.8;
+  color: #1b1c1c;
 }
 
+/* Paragraflar arası nefes */
 .prose p {
-  margin-top: 1.4em;
-  margin-bottom: 1.4em;
-  color: #000;
+  margin-top: 0;
+  margin-bottom: 1.75em;
+  color: #1b1c1c;
 }
 
+/* Drop cap — ilk paragraf ilk harf */
+.article-body > p:first-child::first-letter {
+  font-family: var(--font-jakarta), system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 4.5rem;
+  line-height: 0.82;
+  float: left;
+  padding-top: 0.5rem;
+  padding-right: 0.6rem;
+  color: #870500;
+}
+
+/* Başlıklar */
 .prose h1 {
   font-family: var(--font-jakarta), system-ui, sans-serif;
   font-weight: 800;
   font-size: 45px;
   line-height: 54px;
-  color: rgb(45, 42, 38);
-  margin-top: 2em;
-  margin-bottom: 0.75em;
+  letter-spacing: -0.02em;
+  color: #1b1c1c;
+  margin-top: 2.5em;
+  margin-bottom: 0.6em;
 }
 
 .prose h2 {
   font-family: var(--font-jakarta), system-ui, sans-serif;
   font-weight: 700;
-  font-size: 24px;
-  line-height: 44px;
-  color: rgb(17, 17, 17);
-  margin-top: 2em;
+  font-size: 26px;
+  line-height: 36px;
+  letter-spacing: -0.01em;
+  color: #1b1c1c;
+  margin-top: 2.5em;
   margin-bottom: 0.5em;
 }
 
@@ -53,70 +70,100 @@
   font-family: var(--font-jakarta), system-ui, sans-serif;
   font-weight: 700;
   font-size: 20px;
-  line-height: 36px;
-  color: rgb(17, 17, 17);
-  margin-top: 1.75em;
-  margin-bottom: 0.5em;
+  line-height: 32px;
+  color: #1b1c1c;
+  margin-top: 2em;
+  margin-bottom: 0.4em;
 }
 
 .prose h4 {
   font-family: var(--font-jakarta), system-ui, sans-serif;
   font-weight: 700;
   font-size: 17px;
-  line-height: 30px;
-  color: rgb(17, 17, 17);
-  margin-top: 1.5em;
+  line-height: 28px;
+  color: #1b1c1c;
+  margin-top: 1.75em;
   margin-bottom: 0.4em;
 }
 
+/* Linkler */
 .prose a {
-  color: #111;
+  color: #1b1c1c;
   text-decoration: underline;
   text-underline-offset: 3px;
   text-decoration-thickness: 1px;
 }
-.prose a:hover { color: #555; }
+.prose a:hover { color: #5f5e5e; }
 
+/* Pull quote */
 .prose blockquote {
-  border-left: 3px solid #d1d5db;
-  padding-left: 1.5rem;
+  padding: 2.5rem 2rem;
+  margin: 3rem 0;
+  border-left: 4px solid #870500;
+  background-color: #ffffff;
   font-style: italic;
-  color: #4b5563;
-  margin: 2em 0;
+  font-size: 1.15em;
+  line-height: 1.7;
+  color: #1b1c1c;
+}
+.prose blockquote cite,
+.prose blockquote p:last-child {
+  display: block;
+  margin-top: 1rem;
+  font-size: 0.7em;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #5f5e5e;
 }
 
+/* Görseller */
 .prose img {
-  border-radius: 4px;
+  border-radius: 2px;
   max-width: 100%;
+  margin-top: 2em;
+  margin-bottom: 2em;
 }
 
+/* Listeler */
 .prose ul, .prose ol {
   padding-left: 1.5em;
-  margin: 1.25em 0;
+  margin: 1.5em 0;
 }
-.prose li { margin: 0.4em 0; }
+.prose li {
+  margin: 0.5em 0;
+  color: #1b1c1c;
+}
 
+/* Kod */
 .prose code {
-  background-color: #f3f4f6;
+  background-color: #efeded;
   padding: 0.15em 0.4em;
-  border-radius: 3px;
+  border-radius: 2px;
   font-size: 0.88em;
-  color: #1f2937;
+  color: #1b1c1c;
 }
-
 .prose pre {
-  background-color: #111827;
-  color: #f3f4f6;
-  padding: 1.25rem 1.5rem;
-  border-radius: 4px;
+  background-color: #1b1c1c;
+  color: #fbf9f8;
+  padding: 1.5rem;
+  border-radius: 2px;
   overflow-x: auto;
   font-size: 0.9em;
   line-height: 1.7;
+  margin: 2em 0;
 }
 
-.prose strong { font-weight: 700; color: #111; }
-.prose hr { border: none; border-top: 1px solid #e5e7eb; margin: 2.5em 0; }
+.prose strong { font-weight: 700; }
 
+/* HR → 3 nokta yerine geçer */
+.prose hr {
+  border: none;
+  margin: 4rem 0;
+}
+
+/* Animasyon */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }

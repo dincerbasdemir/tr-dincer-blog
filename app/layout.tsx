@@ -36,7 +36,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="tr" className={plusJakarta.variable}>
-      <body className="bg-gray-50 text-gray-900 antialiased">
+      <body className="text-gray-900 antialiased" style={{ backgroundColor: '#fbf9f8' }}>
         <div className="min-h-screen flex flex-col">
           <Header />
           <main className="flex-grow">{children}</main>

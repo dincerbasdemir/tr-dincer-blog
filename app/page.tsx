@@ -31,7 +31,7 @@ export default async function Home() {
   const gridPosts = posts.slice(1)
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-10">
+    <div className="max-w-5xl mx-auto px-4 py-10" style={{ backgroundColor: '#fbf9f8' }}>
 
       {/* ── Featured ── */}
       {featured && (

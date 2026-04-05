@@ -10,7 +10,6 @@ async function getPost(slug: string) {
     .select('*')
     .eq('slug', slug)
     .single()
-
   if (error) return null
   return data
 }
@@ -18,7 +17,6 @@ async function getPost(slug: string) {
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const post = await getPost(params.slug)
   if (!post) return { title: 'Yazı bulunamadı' }
-
   return {
     title: `${post.title} - tr.dincer`,
     description: post.excerpt || post.title,
@@ -36,67 +34,110 @@ export default async function PostPage({ params }: { params: { slug: string } })
   if (!post) notFound()
 
   return (
-    <div className="mx-auto px-4 py-10" style={{ maxWidth: '950px' }}>
-      <article
-        className="bg-white px-8 md:px-14 py-10"
-        style={{ borderRadius: '2px' }}
-      >
-        {/* Header */}
-        <header className="mb-10">
-          <h1
-            className="text-gray-900 mb-5 text-balance"
-            style={{ fontSize: '45px', lineHeight: '54px', fontWeight: 800, color: 'rgb(45, 42, 38)' }}
+    <div style={{ backgroundColor: '#fbf9f8', minHeight: '100vh' }}>
+      <article className="max-w-[740px] mx-auto px-5 pt-14 pb-24">
+
+        {/* Kategori + Okuma Süresi */}
+        <div className="flex items-center gap-2 mb-8 text-xs tracking-widest uppercase font-semibold" style={{ color: '#870500' }}>
+          {post.categories?.[0] && <span>{post.categories[0]}</span>}
+          {post.reading_time && (
+            <>
+              <span className="inline-block w-1 h-1 rounded-full" style={{ backgroundColor: '#c3c6d6' }} />
+              <span>{post.reading_time}</span>
+            </>
+          )}
+        </div>
+
+        {/* Başlık */}
+        <h1
+          className="mb-6"
+          style={{
+            fontSize: '45px',
+            lineHeight: '54px',
+            fontWeight: 800,
+            letterSpacing: '-0.02em',
+            color: '#1b1c1c',
+          }}
+        >
+          {post.title}
+        </h1>
+
+        {/* Excerpt — italic lead */}
+        {post.excerpt && (
+          <p
+            className="italic mb-10"
+            style={{ fontSize: '21px', lineHeight: '34px', color: '#5f5e5e' }}
           >
-            {post.title}
-          </h1>
+            {post.excerpt}
+          </p>
+        )}
 
-          <div className="flex flex-wrap items-center gap-2 text-gray-400" style={{ fontSize: '14px' }}>
-            <time dateTime={post.published_at}>
-              {format(new Date(post.published_at), 'd MMMM yyyy', { locale: tr })}
-            </time>
-            {post.reading_time && <><span>·</span><span>{post.reading_time}</span></>}
-            {post.categories && post.categories.length > 0 && (
-              <><span>·</span><span>{post.categories.join(', ')}</span></>
-            )}
-          </div>
-        </header>
-
-        {/* Content */}
+        {/* Yazar + Tarih satırı */}
         <div
-          className="prose prose-lg max-w-none"
-          dangerouslySetInnerHTML={{ __html: post.content }}
-        />
-
-        {/* Tags */}
-        {post.tags && post.tags.length > 0 && (
-          <div className="mt-10 pt-8 border-t border-gray-100">
-            <div className="flex flex-wrap gap-2">
-              {post.tags.map((tag: string) => (
-                <span
-                  key={tag}
-                  className="px-3 py-1 text-gray-500 bg-gray-50 border border-gray-200"
-                  style={{ fontSize: '12px', borderRadius: '2px' }}
-                >
-                  #{tag}
-                </span>
-              ))}
+          className="flex items-center justify-between py-6 mb-14"
+          style={{
+            borderTop: '1px solid rgba(195,198,214,0.35)',
+            borderBottom: '1px solid rgba(195,198,214,0.35)',
+          }}
+        >
+          <div>
+            <div className="text-sm font-bold" style={{ color: '#1b1c1c' }}>Dinçer</div>
+            <div className="text-xs" style={{ color: '#5f5e5e' }}>
+              {format(new Date(post.published_at), 'd MMMM yyyy', { locale: tr })}
             </div>
+          </div>
+          <a
+            href="/"
+            className="text-xs font-semibold uppercase tracking-widest transition-colors hover:text-gray-900"
+            style={{ color: '#5f5e5e' }}
+          >
+            ← Tüm yazılar
+          </a>
+        </div>
+
+        {/* Featured görsel — full-bleed */}
+        {post.featured_image && (
+          <figure className="mb-14 -mx-5 md:-mx-20">
+            <img
+              src={post.featured_image}
+              alt={post.title}
+              className="w-full object-cover"
+              style={{ aspectRatio: '21/9' }}
+            />
+          </figure>
+        )}
+
+        {/* İçerik */}
+        <div className="prose article-body" dangerouslySetInnerHTML={{ __html: post.content }} />
+
+        {/* 3-nokta separator */}
+        <div className="flex justify-center items-center py-16 gap-3" style={{ color: '#c3c6d6' }}>
+          <span className="inline-block w-1.5 h-1.5 rounded-full bg-current" />
+          <span className="inline-block w-1.5 h-1.5 rounded-full bg-current" />
+          <span className="inline-block w-1.5 h-1.5 rounded-full bg-current" />
+        </div>
+
+        {/* Etiketler */}
+        {post.tags && post.tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-10">
+            {post.tags.map((tag: string) => (
+              <span
+                key={tag}
+                className="px-3 py-1"
+                style={{
+                  fontSize: '11px',
+                  backgroundColor: '#efeded',
+                  color: '#5f5e5e',
+                  borderRadius: '2px',
+                  letterSpacing: '0.05em',
+                }}
+              >
+                #{tag}
+              </span>
+            ))}
           </div>
         )}
 
-        {/* Back link */}
-        <div className="mt-10 pt-8 border-t border-gray-100">
-          <a
-            href="/"
-            className="inline-flex items-center text-gray-500 hover:text-gray-900 transition-colors font-medium"
-            style={{ fontSize: '14px' }}
-          >
-            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Tüm yazılara dön
-          </a>
-        </div>
       </article>
     </div>
   )
