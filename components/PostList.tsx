@@ -72,7 +72,7 @@ export default function PostList({
                   <img
                     src={post.featured_image}
                     alt={post.title}
-                    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block', border: 'none', outline: 'none' }}
+                    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block', border: 'none', outline: 'none', clipPath: 'inset(1px)' }}
                   />
                 ) : (
                   <div style={{ position: 'absolute', inset: 0, backgroundColor: placeholderColor(post.title) }} />
