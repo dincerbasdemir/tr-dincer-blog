@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { format } from 'date-fns'
 import { tr } from 'date-fns/locale'
 
-export default function SearchPage() {
+function SearchResults() {
   const searchParams = useSearchParams()
   const query = searchParams.get('q') || ''
   const [results, setResults] = useState<any[]>([])
@@ -23,7 +23,6 @@ export default function SearchPage() {
 
       setLoading(true)
 
-      // Basit client-side arama (production'da full-text search kullanın)
       const { data, error } = await supabase
         .from('posts')
         .select('*')
@@ -45,7 +44,7 @@ export default function SearchPage() {
   }, [query])
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
+    <>
       <div className="mb-12">
         <h1 className="font-serif text-4xl md:text-5xl font-bold text-gray-900 mb-4">
           Arama Sonuçları
@@ -124,6 +123,20 @@ export default function SearchPage() {
           ))}
         </div>
       )}
+    </>
+  )
+}
+
+export default function SearchPage() {
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-12">
+      <Suspense fallback={
+        <div className="text-center py-12">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+        </div>
+      }>
+        <SearchResults />
+      </Suspense>
     </div>
   )
 }
