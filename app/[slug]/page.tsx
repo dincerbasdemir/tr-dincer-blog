@@ -96,16 +96,14 @@ export default async function PostPage({ params }: { params: { slug: string } })
         </div>
 
         {/* Featured görsel — full-bleed */}
-        {post.featured_image && (
-          <figure className="mb-14 -mx-5 md:-mx-20">
-            <img
-              src={post.featured_image}
+        <figure className="mb-14 -mx-5 md:-mx-20">
+          <img
+              src={post.featured_image || `/og?title=${encodeURIComponent(post.title)}&category=${encodeURIComponent(post.categories?.[0] || '')}`}
               alt={post.title}
               className="w-full object-cover"
               style={{ aspectRatio: '21/9' }}
             />
           </figure>
-        )}
 
         {/* İçerik */}
         <div className="prose article-body" dangerouslySetInnerHTML={{ __html: post.content }} />

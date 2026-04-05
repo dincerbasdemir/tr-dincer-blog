@@ -68,19 +68,12 @@ export default function PostList({
             >
               {/* Sol: Görsel */}
               <div className="flex-shrink-0" style={{ width: '48%' }}>
-                {post.featured_image ? (
-                  <img
-                    src={post.featured_image}
-                    alt={post.title}
-                    className="w-full h-full object-cover"
-                    style={{ minHeight: '300px' }}
-                  />
-                ) : (
-                  <div
-                    className="w-full h-full"
-                    style={{ minHeight: '300px', backgroundColor: placeholderColor(post.title) }}
-                  />
-                )}
+                <img
+                  src={post.featured_image || `/og?title=${encodeURIComponent(post.title)}&category=${encodeURIComponent(post.categories?.[0] || '')}`}
+                  alt={post.title}
+                  className="w-full h-full object-cover"
+                  style={{ minHeight: '300px' }}
+                />
               </div>
 
               {/* Sağ: İçerik */}
