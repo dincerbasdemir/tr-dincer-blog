@@ -64,27 +64,27 @@ export default function PostList({
             <Link
               href={`/${post.slug}`}
               className="group flex bg-white overflow-hidden hover:shadow-md transition-shadow duration-300"
-              style={{ borderRadius: '12px', minHeight: '220px' }}
+              style={{ borderRadius: '12px', minHeight: '300px' }}
             >
               {/* Sol: Görsel */}
-              <div className="flex-shrink-0" style={{ width: '340px' }}>
+              <div className="flex-shrink-0" style={{ width: '48%' }}>
                 {post.featured_image ? (
                   <img
                     src={post.featured_image}
                     alt={post.title}
                     className="w-full h-full object-cover"
-                    style={{ minHeight: '220px' }}
+                    style={{ minHeight: '300px' }}
                   />
                 ) : (
                   <div
                     className="w-full h-full"
-                    style={{ minHeight: '220px', backgroundColor: placeholderColor(post.title) }}
+                    style={{ minHeight: '300px', backgroundColor: placeholderColor(post.title) }}
                   />
                 )}
               </div>
 
               {/* Sağ: İçerik */}
-              <div className="flex-1 flex flex-col justify-between p-7">
+              <div className="flex-1 flex flex-col justify-between p-9">
                 <div>
                   {/* Kategori */}
                   {post.categories?.[0] && (
@@ -100,8 +100,8 @@ export default function PostList({
 
                   {/* Başlık */}
                   <h2
-                    className="group-hover:text-gray-600 transition-colors mb-3"
-                    style={{ fontSize: '22px', lineHeight: '30px', fontWeight: 800, color: '#111827', letterSpacing: '-0.01em' }}
+                    className="group-hover:text-gray-600 transition-colors mb-4"
+                    style={{ fontSize: '26px', lineHeight: '34px', fontWeight: 800, color: '#111827', letterSpacing: '-0.02em' }}
                   >
                     {post.title}
                   </h2>
@@ -110,11 +110,11 @@ export default function PostList({
                   {post.excerpt && (
                     <p
                       style={{
-                        fontSize: '14px',
-                        lineHeight: '22px',
+                        fontSize: '15px',
+                        lineHeight: '24px',
                         color: '#6b7280',
                         display: '-webkit-box',
-                        WebkitLineClamp: 2,
+                        WebkitLineClamp: 3,
                         WebkitBoxOrient: 'vertical',
                         overflow: 'hidden',
                       }}
