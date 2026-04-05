@@ -97,12 +97,12 @@ export default async function PostPage({ params }: { params: { slug: string } })
 
         {/* Featured görsel — full-bleed */}
         {post.featured_image && (
-          <figure className="mb-14 -mx-5 md:-mx-20">
+          <figure className="mb-14 -mx-5 md:-mx-20" style={{ margin: '0 -20px 56px', border: 'none', padding: 0 }}>
             <img
               src={post.featured_image}
               alt={post.title}
-              className="w-full object-cover"
-              style={{ aspectRatio: '21/9' }}
+              className="w-full"
+              style={{ display: 'block', width: '100%', border: 'none', outline: 'none' }}
             />
           </figure>
         )}
@@ -143,4 +143,4 @@ export default async function PostPage({ params }: { params: { slug: string } })
   )
 }
 
-export const revalidate = 3600
+export const dynamic = 'force-dynamic'
