@@ -1,4 +1,5 @@
 import { createAdminClient } from '@/lib/supabase-admin'
+import AdminShell from '@/components/admin/AdminShell'
 import PostEditor from '@/components/admin/PostEditor'
 import { notFound } from 'next/navigation'
 
@@ -14,5 +15,9 @@ export default async function EditPostPage({ params }: { params: { id: string } 
 
   if (!post) notFound()
 
-  return <PostEditor post={post} categories={categories || []} />
+  return (
+    <AdminShell>
+      <PostEditor post={post} categories={categories || []} />
+    </AdminShell>
+  )
 }
