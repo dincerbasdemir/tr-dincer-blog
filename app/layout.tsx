@@ -1,8 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Plus_Jakarta_Sans } from 'next/font/google'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -37,11 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="tr" className={plusJakarta.variable}>
       <body className="text-gray-900 antialiased" style={{ backgroundColor: '#fbf9f8' }}>
-        <div className="min-h-screen flex flex-col">
-          <Header />
-          <main className="flex-grow">{children}</main>
-          <Footer />
-        </div>
+        {children}
       </body>
     </html>
   )
