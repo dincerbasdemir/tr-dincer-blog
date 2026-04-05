@@ -8,10 +8,18 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
   body {
     @apply font-sans;
     background-color: #fbf9f8;
+    overflow-x: hidden;
+  }
+  img {
+    border: none;
+    outline: none;
+    box-shadow: none;
+    display: block;
   }
 }
 

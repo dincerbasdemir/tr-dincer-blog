@@ -95,19 +95,18 @@ export default async function PostPage({ params }: { params: { slug: string } })
           </a>
         </div>
 
-        {/* Featured görsel — gerçek full-bleed */}
+        {/* Featured görsel — full-bleed */}
         {post.featured_image && (
           <div style={{
-            width: '100vw',
-            position: 'relative',
-            left: '50%',
-            transform: 'translateX(-50%)',
+            marginLeft: 'calc(-50vw + 50%)',
+            marginRight: 'calc(-50vw + 50%)',
             marginBottom: '56px',
+            lineHeight: 0,
           }}>
             <img
               src={post.featured_image}
               alt={post.title}
-              style={{ display: 'block', width: '100%', height: 'auto', border: 'none', outline: 'none', borderRadius: 0, boxShadow: 'none' }}
+              style={{ display: 'block', width: '100%', height: 'auto', border: 'none', outline: 'none', borderRadius: 0, boxShadow: 'none', verticalAlign: 'bottom' }}
             />
           </div>
         )}
