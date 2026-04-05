@@ -8,30 +8,30 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-dm-sans)', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-jakarta)', 'system-ui', 'sans-serif'],
       },
       typography: {
         DEFAULT: {
           css: {
-            maxWidth: '68ch',
-            color: '#1a1a1a',
-            fontSize: '1.2rem',
-            lineHeight: '1.85',
-            fontFamily: 'var(--font-dm-sans)',
-            p: { marginTop: '1.6em', marginBottom: '1.6em' },
+            maxWidth: 'none',
+            color: 'rgb(17, 17, 17)',
+            fontSize: '16px',
+            lineHeight: '30px',
+            fontFamily: 'var(--font-jakarta), system-ui, sans-serif',
+            p: { marginTop: '1.4em', marginBottom: '1.4em' },
             a: {
               color: '#111',
               textDecoration: 'underline',
-              textDecorationThickness: '1px',
               textUnderlineOffset: '3px',
               '&:hover': { color: '#555' },
             },
             'h1, h2, h3, h4': {
-              fontFamily: 'var(--font-dm-sans)',
-              fontWeight: '600',
+              fontFamily: 'var(--font-jakarta), system-ui, sans-serif',
             },
-            h2: { fontSize: '1.75rem', marginTop: '2em', marginBottom: '0.75em' },
-            h3: { fontSize: '1.35rem', marginTop: '1.75em', marginBottom: '0.6em' },
+            h1: { fontWeight: '800', fontSize: '45px', lineHeight: '54px' },
+            h2: { fontWeight: '700', fontSize: '24px', lineHeight: '44px' },
+            h3: { fontWeight: '700', fontSize: '20px', lineHeight: '36px' },
+            h4: { fontWeight: '700', fontSize: '17px', lineHeight: '30px' },
             blockquote: {
               fontStyle: 'italic',
               borderLeftWidth: '3px',
@@ -41,9 +41,9 @@ module.exports = {
             },
             code: {
               backgroundColor: '#f3f4f6',
-              padding: '0.2em 0.4em',
+              padding: '0.15em 0.4em',
               borderRadius: '3px',
-              fontSize: '0.9em',
+              fontSize: '0.88em',
             },
           },
         },

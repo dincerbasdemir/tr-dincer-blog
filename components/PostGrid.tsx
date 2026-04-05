@@ -109,9 +109,9 @@ export default function PostGrid({
                 <h3
                   className="text-gray-900 group-hover:text-gray-500 transition-colors"
                   style={{
-                    fontSize: '19px',
-                    lineHeight: '26px',
-                    fontWeight: 700,
+                    fontSize: '17px',
+                    lineHeight: '23px',
+                    fontWeight: 800,
                     display: '-webkit-box',
                     WebkitLineClamp: 3,
                     WebkitBoxOrient: 'vertical',

@@ -14,60 +14,59 @@
   }
 }
 
-/* ── Prose (tekil yazı içeriği) ── */
+/* ── Prose ── */
 .prose {
   max-width: none;
-  color: #1a1a1a;
-  font-size: 20px;
-  line-height: 34px;
-  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  font-family: var(--font-jakarta), system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 30px;
+  color: rgb(17, 17, 17);
 }
 
 .prose p {
-  margin-top: 1.5em;
-  margin-bottom: 1.5em;
-  color: #2d2d2d;
+  margin-top: 1.4em;
+  margin-bottom: 1.4em;
+  color: rgb(17, 17, 17);
 }
 
-/* DM Sans başlıklar — ekrandaki değerlere göre */
 .prose h1 {
-  font-family: var(--font-dm-sans), system-ui, sans-serif;
-  font-weight: 700;
-  font-size: 41px;
-  line-height: 51px;
-  color: #000;
+  font-family: var(--font-jakarta), system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 45px;
+  line-height: 54px;
+  color: rgb(45, 42, 38);
   margin-top: 2em;
   margin-bottom: 0.75em;
 }
 
 .prose h2 {
-  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  font-family: var(--font-jakarta), system-ui, sans-serif;
   font-weight: 700;
-  font-size: 30px;
-  line-height: 38px;
-  color: #000;
+  font-size: 24px;
+  line-height: 44px;
+  color: rgb(17, 17, 17);
   margin-top: 2em;
-  margin-bottom: 0.75em;
+  margin-bottom: 0.5em;
 }
 
 .prose h3 {
-  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  font-family: var(--font-jakarta), system-ui, sans-serif;
   font-weight: 700;
-  font-size: 24px;
-  line-height: 32px;
-  color: #111;
+  font-size: 20px;
+  line-height: 36px;
+  color: rgb(17, 17, 17);
   margin-top: 1.75em;
-  margin-bottom: 0.6em;
+  margin-bottom: 0.5em;
 }
 
 .prose h4 {
-  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  font-family: var(--font-jakarta), system-ui, sans-serif;
   font-weight: 700;
-  font-size: 20px;
-  line-height: 28px;
-  color: #111;
+  font-size: 17px;
+  line-height: 30px;
+  color: rgb(17, 17, 17);
   margin-top: 1.5em;
-  margin-bottom: 0.5em;
+  margin-bottom: 0.4em;
 }
 
 .prose a {
@@ -76,9 +75,7 @@
   text-underline-offset: 3px;
   text-decoration-thickness: 1px;
 }
-.prose a:hover {
-  color: #555;
-}
+.prose a:hover { color: #555; }
 
 .prose blockquote {
   border-left: 3px solid #d1d5db;
@@ -97,9 +94,7 @@
   padding-left: 1.5em;
   margin: 1.25em 0;
 }
-.prose li {
-  margin: 0.4em 0;
-}
+.prose li { margin: 0.4em 0; }
 
 .prose code {
   background-color: #f3f4f6;
@@ -119,22 +114,11 @@
   line-height: 1.7;
 }
 
-.prose strong {
-  font-weight: 700;
-  color: #111;
-}
+.prose strong { font-weight: 700; color: #111; }
+.prose hr { border: none; border-top: 1px solid #e5e7eb; margin: 2.5em 0; }
 
-.prose hr {
-  border: none;
-  border-top: 1px solid #e5e7eb;
-  margin: 2.5em 0;
-}
-
-/* Animasyon */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-.fade-in {
-  animation: fadeIn 0.35s ease-out;
-}
+.fade-in { animation: fadeIn 0.35s ease-out; }

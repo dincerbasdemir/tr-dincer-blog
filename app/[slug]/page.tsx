@@ -45,7 +45,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
         <header className="mb-10">
           <h1
             className="text-gray-900 mb-5 text-balance"
-            style={{ fontSize: '41px', lineHeight: '51px', fontWeight: 700 }}
+            style={{ fontSize: '45px', lineHeight: '54px', fontWeight: 800, color: 'rgb(45, 42, 38)' }}
           >
             {post.title}
           </h1>

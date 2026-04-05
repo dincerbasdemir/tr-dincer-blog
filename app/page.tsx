@@ -67,7 +67,7 @@ export default async function Home() {
               <div className="flex-1 min-w-0 flex flex-col gap-3">
                 <h2
                   className="text-gray-900 group-hover:text-gray-500 transition-colors text-balance"
-                  style={{ fontSize: '28px', lineHeight: '36px', fontWeight: 700 }}
+                  style={{ fontSize: '28px', lineHeight: '36px', fontWeight: 800 }}
                 >
                   {featured.title}
                 </h2>
