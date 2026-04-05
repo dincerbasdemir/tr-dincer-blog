@@ -1,108 +1,69 @@
 import { supabase } from '@/lib/supabase'
-import Link from 'next/link'
-import { format } from 'date-fns'
-import { tr } from 'date-fns/locale'
-import PostGrid from '@/components/PostGrid'
-
-const INITIAL_FETCH = 11 // 1 featured + 10 grid
-
-const PLACEHOLDER_COLORS = [
-  '#f0ece6', '#e6edf0', '#ebe6f0', '#e6f0ec',
-  '#f0e9e6', '#ecf0e6', '#f0e6ea', '#e6eff0',
-]
-function placeholderColor(title: string) {
-  return PLACEHOLDER_COLORS[title.charCodeAt(0) % PLACEHOLDER_COLORS.length]
-}
+import PostList from '@/components/PostList'
 
 async function getPosts() {
   const { data, error } = await supabase
     .from('posts')
-    .select('id, title, slug, excerpt, published_at, categories, reading_time, featured_image')
+    .select('id, title, slug, published_at, categories, reading_time, featured_image')
     .order('published_at', { ascending: false })
-    .limit(INITIAL_FETCH)
-
+    .limit(10)
   if (error) return []
   return data
 }
 
+async function getHeroImage() {
+  const { data } = await supabase
+    .from('posts')
+    .select('featured_image, title')
+    .not('featured_image', 'is', null)
+    .order('published_at', { ascending: false })
+    .limit(1)
+    .single()
+  return data
+}
+
 export default async function Home() {
-  const posts = await getPosts()
-  const featured = posts[0]
-  const gridPosts = posts.slice(1)
+  const [posts, hero] = await Promise.all([getPosts(), getHeroImage()])
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-10" style={{ backgroundColor: '#fbf9f8' }}>
+    <div className="max-w-[740px] mx-auto px-5 pb-24">
 
-      {/* ── Featured ── */}
-      {featured && (
-        <Link href={`/${featured.slug}`} className="group block mb-6">
-          <div
-            className="bg-white transition-all duration-200 p-6 md:p-8"
-            style={{ borderRadius: '2px' }}
-          >
-            <span className="inline-block text-[11px] font-semibold tracking-widest uppercase text-gray-400 mb-5">
-              Son Yazı
-            </span>
+      {/* ── Hero ── */}
+      <section className="pt-14 pb-16">
+        <h1
+          className="mb-4"
+          style={{ fontSize: '38px', lineHeight: '46px', fontWeight: 800, letterSpacing: '-0.02em', color: '#111827' }}
+        >
+          tr.dincer — Ağacı sev, yeşili koru, ayıyı öp.
+        </h1>
+        <p style={{ fontSize: '16px', lineHeight: '26px', color: '#6b7280', maxWidth: '520px' }}>
+          Teknoloji, tasarım, pazarlama ve günlük düşünceler üzerine kişisel yazılar.
+        </p>
 
-            <div className="flex gap-6 items-start">
-              {featured.featured_image ? (
-                <img
-                  src={featured.featured_image}
-                  alt={featured.title}
-                  className="flex-shrink-0 object-cover"
-                  style={{ width: '220px', height: '160px', borderRadius: '3px' }}
-                />
-              ) : (
-                <div
-                  className="flex-shrink-0"
-                  style={{
-                    width: '220px',
-                    height: '160px',
-                    borderRadius: '3px',
-                    backgroundColor: placeholderColor(featured.title),
-                  }}
-                />
-              )}
+        {/* Hero görsel */}
+        {hero?.featured_image && (
+          <figure className="mt-10">
+            <img
+              src={hero.featured_image}
+              alt={hero.title}
+              className="w-full object-cover"
+              style={{ aspectRatio: '16/9', borderRadius: '2px' }}
+            />
+          </figure>
+        )}
+      </section>
 
-              <div className="flex-1 min-w-0 flex flex-col gap-3">
-                <h2
-                  className="text-gray-900 group-hover:text-gray-500 transition-colors text-balance"
-                  style={{ fontSize: '28px', lineHeight: '36px', fontWeight: 800 }}
-                >
-                  {featured.title}
-                </h2>
+      {/* ── Son Yazılar ── */}
+      <section>
+        <h2
+          className="mb-6"
+          style={{ fontSize: '13px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#9ca3af' }}
+        >
+          Son Yazılar
+        </h2>
 
-                {featured.excerpt && (
-                  <p
-                    className="text-gray-500"
-                    style={{
-                      fontSize: '15px',
-                      lineHeight: '22px',
-                      display: '-webkit-box',
-                      WebkitLineClamp: 3,
-                      WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden',
-                    }}
-                  >
-                    {featured.excerpt}
-                  </p>
-                )}
-
-                <div className="flex items-center gap-1.5 text-gray-400" style={{ fontSize: '12px' }}>
-                  <time dateTime={featured.published_at}>
-                    {format(new Date(featured.published_at), 'd MMMM yyyy', { locale: tr })}
-                  </time>
-                  {featured.reading_time && <><span>·</span><span>{featured.reading_time}</span></>}
-                  {featured.categories?.[0] && <><span>·</span><span>{featured.categories[0]}</span></>}
-                </div>
-              </div>
-            </div>
-          </div>
-        </Link>
-      )}
-
-      {/* ── Grid + Infinite Scroll ── */}
-      <PostGrid initialPosts={gridPosts} initialOffset={INITIAL_FETCH} />
+        <PostList initialPosts={posts} initialOffset={10} />
+      </section>
 
     </div>
   )
