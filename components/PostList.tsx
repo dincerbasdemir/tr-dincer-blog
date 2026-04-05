@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import { format } from 'date-fns'
 import { tr } from 'date-fns/locale'
@@ -10,6 +10,7 @@ export type Post = {
   id: string
   title: string
   slug: string
+  excerpt?: string
   published_at: string
   categories?: string[]
   reading_time?: string
@@ -17,8 +18,8 @@ export type Post = {
 }
 
 const PLACEHOLDER_COLORS = [
-  '#f0ece6', '#e6edf0', '#ebe6f0', '#e6f0ec',
-  '#f0e9e6', '#ecf0e6', '#f0e6ea', '#e6eff0',
+  '#e8edf5', '#f0e8f5', '#e8f5ee', '#f5ede8',
+  '#eef5e8', '#f5e8f0', '#e8f2f5', '#f5f0e8',
 ]
 function placeholderColor(title: string) {
   return PLACEHOLDER_COLORS[title.charCodeAt(0) % PLACEHOLDER_COLORS.length]
@@ -44,7 +45,7 @@ export default function PostList({
     const from = offsetRef.current
     const { data, error } = await supabase
       .from('posts')
-      .select('id, title, slug, published_at, categories, reading_time, featured_image')
+      .select('id, title, slug, excerpt, published_at, categories, reading_time, featured_image')
       .order('published_at', { ascending: false })
       .range(from, from + PAGE_SIZE - 1)
     if (!error && data) {
@@ -57,72 +58,120 @@ export default function PostList({
 
   return (
     <div>
-      {/* Liste */}
-      <div>
-        {posts.map((post, i) => (
+      <div className="flex flex-col gap-4">
+        {posts.map((post) => (
           <article key={post.id}>
-            <Link href={`/${post.slug}`} className="group flex items-center justify-between gap-6 py-5 hover:opacity-80 transition-opacity">
-              {/* Sol: meta + başlık */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1.5" style={{ fontSize: '12px', color: '#9ca3af' }}>
-                  <time dateTime={post.published_at}>
-                    {format(new Date(post.published_at), 'd MMM, yyyy', { locale: tr })}
-                  </time>
-                  {post.categories?.[0] && (
-                    <><span>·</span><span style={{ color: '#9ca3af' }}>#{post.categories[0]}</span></>
-                  )}
-                </div>
-                <h3
-                  className="text-gray-900 leading-snug"
-                  style={{ fontSize: '16px', fontWeight: 700, lineHeight: '22px' }}
-                >
-                  {post.title}
-                </h3>
+            <Link
+              href={`/${post.slug}`}
+              className="group flex bg-white overflow-hidden hover:shadow-md transition-shadow duration-300"
+              style={{ borderRadius: '12px', minHeight: '220px' }}
+            >
+              {/* Sol: Görsel */}
+              <div className="flex-shrink-0" style={{ width: '340px' }}>
+                {post.featured_image ? (
+                  <img
+                    src={post.featured_image}
+                    alt={post.title}
+                    className="w-full h-full object-cover"
+                    style={{ minHeight: '220px' }}
+                  />
+                ) : (
+                  <div
+                    className="w-full h-full"
+                    style={{ minHeight: '220px', backgroundColor: placeholderColor(post.title) }}
+                  />
+                )}
               </div>
 
-              {/* Sağ: küçük kare thumbnail */}
-              {post.featured_image ? (
-                <img
-                  src={post.featured_image}
-                  alt={post.title}
-                  className="flex-shrink-0 object-cover rounded-sm"
-                  style={{ width: '72px', height: '54px' }}
-                />
-              ) : (
-                <div
-                  className="flex-shrink-0 rounded-sm"
-                  style={{
-                    width: '72px',
-                    height: '54px',
-                    backgroundColor: placeholderColor(post.title),
-                  }}
-                />
-              )}
+              {/* Sağ: İçerik */}
+              <div className="flex-1 flex flex-col justify-between p-7">
+                <div>
+                  {/* Kategori */}
+                  {post.categories?.[0] && (
+                    <div className="flex items-center gap-1.5 mb-3">
+                      <svg className="w-3.5 h-3.5" style={{ color: '#3b82f6' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                      </svg>
+                      <span style={{ fontSize: '13px', fontWeight: 600, color: '#3b82f6' }}>
+                        {post.categories[0]}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Başlık */}
+                  <h2
+                    className="group-hover:text-gray-600 transition-colors mb-3"
+                    style={{ fontSize: '22px', lineHeight: '30px', fontWeight: 800, color: '#111827', letterSpacing: '-0.01em' }}
+                  >
+                    {post.title}
+                  </h2>
+
+                  {/* Excerpt */}
+                  {post.excerpt && (
+                    <p
+                      style={{
+                        fontSize: '14px',
+                        lineHeight: '22px',
+                        color: '#6b7280',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      {post.excerpt}
+                    </p>
+                  )}
+                </div>
+
+                {/* Alt: Yazar + Tarih */}
+                <div className="flex items-center justify-between mt-5">
+                  <div className="flex items-center gap-2">
+                    <div
+                      className="w-7 h-7 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0"
+                      style={{ backgroundColor: '#1b1c1c', fontSize: '11px' }}
+                    >
+                      D
+                    </div>
+                    <span style={{ fontSize: '13px', fontWeight: 600, color: '#374151' }}>Dinçer</span>
+                  </div>
+                  <time
+                    dateTime={post.published_at}
+                    style={{ fontSize: '13px', color: '#9ca3af' }}
+                  >
+                    {format(new Date(post.published_at), 'd MMMM yyyy', { locale: tr })}
+                  </time>
+                </div>
+              </div>
             </Link>
-            {/* Ayırıcı — son item hariç */}
-            {i < posts.length - 1 && (
-              <div style={{ height: '1px', backgroundColor: '#f3f4f6' }} />
-            )}
           </article>
         ))}
       </div>
 
-      {/* Daha Fazla butonu */}
+      {/* Daha Fazla */}
       {hasMore && (
-        <div className="mt-10 flex justify-center">
+        <div className="mt-8 flex justify-center">
           <button
             onClick={loadMore}
             disabled={loading}
-            className="px-8 py-2.5 text-sm font-medium text-gray-600 border border-gray-200 hover:border-gray-400 hover:text-gray-900 transition-all disabled:opacity-50"
-            style={{ borderRadius: '2px', minWidth: '180px' }}
+            className="font-semibold transition-all hover:opacity-80 disabled:opacity-50"
+            style={{
+              backgroundColor: '#ffffff',
+              border: '1px solid #e5e7eb',
+              borderRadius: '999px',
+              padding: '10px 32px',
+              fontSize: '14px',
+              color: '#374151',
+              minWidth: '180px',
+            }}
           >
             {loading ? (
               <span className="inline-flex items-center gap-2">
-                <span className="w-3.5 h-3.5 border border-gray-400 border-t-gray-700 rounded-full animate-spin" />
-                Yükleniyor
+                <span className="w-3.5 h-3.5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
+                Yükleniyor…
               </span>
             ) : (
-              'Daha Fazla'
+              'Daha Fazla Yazı'
             )}
           </button>
         </div>
