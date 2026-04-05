@@ -1,19 +1,14 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Inter, Crimson_Pro } from 'next/font/google'
+import { DM_Sans } from 'next/font/google'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
-const inter = Inter({ 
+const dmSans = DM_Sans({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-dm-sans',
   display: 'swap',
-})
-
-const crimson = Crimson_Pro({ 
-  subsets: ['latin'],
-  variable: '--font-crimson',
-  display: 'swap',
+  weight: ['400', '500', '600', '700'],
 })
 
 export const metadata: Metadata = {
@@ -21,6 +16,7 @@ export const metadata: Metadata = {
   description: 'Kişisel blog - Teknoloji, tasarım, pazarlama ve günlük düşünceler',
   keywords: ['blog', 'teknoloji', 'tasarım', 'pazarlama', 'günlük'],
   authors: [{ name: 'Dinçer' }],
+  metadataBase: new URL('https://tr.dincer.co'),
   openGraph: {
     type: 'website',
     locale: 'tr_TR',
@@ -46,7 +42,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="tr" className={`${inter.variable} ${crimson.variable}`}>
+    <html lang="tr" className={dmSans.variable}>
       <body className="bg-white text-gray-900 antialiased">
         <div className="min-h-screen flex flex-col">
           <Header />
