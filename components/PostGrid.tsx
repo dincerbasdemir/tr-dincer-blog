@@ -81,8 +81,8 @@ export default function PostGrid({
           <article key={post.id}>
             <Link
               href={`/${post.slug}`}
-              className="group flex gap-4 items-center bg-white hover:shadow-sm transition-all duration-200 p-4"
-              style={{ borderRadius: '2px', border: '1px solid #f2f2f2' }}
+              className="group flex gap-4 items-center bg-white transition-all duration-200 p-4"
+              style={{ borderRadius: '2px' }}
             >
               {/* Thumbnail */}
               {post.featured_image ? (

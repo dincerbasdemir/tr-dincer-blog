@@ -37,8 +37,8 @@ export default async function Home() {
       {featured && (
         <Link href={`/${featured.slug}`} className="group block mb-6">
           <div
-            className="bg-white hover:shadow-sm transition-all duration-200 p-6 md:p-8"
-            style={{ borderRadius: '2px', border: '1px solid #f2f2f2' }}
+            className="bg-white transition-all duration-200 p-6 md:p-8"
+            style={{ borderRadius: '2px' }}
           >
             <span className="inline-block text-[11px] font-semibold tracking-widest uppercase text-gray-400 mb-5">
               Son Yazı

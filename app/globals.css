@@ -18,15 +18,15 @@
 .prose {
   max-width: none;
   font-family: var(--font-jakarta), system-ui, sans-serif;
-  font-size: 16px;
+  font-size: 17px;
   line-height: 30px;
-  color: rgb(17, 17, 17);
+  color: #000;
 }
 
 .prose p {
   margin-top: 1.4em;
   margin-bottom: 1.4em;
-  color: rgb(17, 17, 17);
+  color: #000;
 }
 
 .prose h1 {

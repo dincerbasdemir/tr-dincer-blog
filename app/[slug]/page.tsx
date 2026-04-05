@@ -39,7 +39,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
     <div className="mx-auto px-4 py-10" style={{ maxWidth: '950px' }}>
       <article
         className="bg-white px-8 md:px-14 py-10"
-        style={{ borderRadius: '2px', border: '1px solid #f2f2f2' }}
+        style={{ borderRadius: '2px' }}
       >
         {/* Header */}
         <header className="mb-10">
