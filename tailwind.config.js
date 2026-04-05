@@ -9,7 +9,6 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['var(--font-dm-sans)', 'system-ui', 'sans-serif'],
-        serif: ['var(--font-lora)', 'Georgia', 'serif'],
       },
       typography: {
         DEFAULT: {
@@ -28,9 +27,8 @@ module.exports = {
               '&:hover': { color: '#555' },
             },
             'h1, h2, h3, h4': {
-              fontFamily: 'var(--font-lora)',
+              fontFamily: 'var(--font-dm-sans)',
               fontWeight: '600',
-              letterSpacing: '-0.01em',
             },
             h2: { fontSize: '1.75rem', marginTop: '2em', marginBottom: '0.75em' },
             h3: { fontSize: '1.35rem', marginTop: '1.75em', marginBottom: '0.6em' },
