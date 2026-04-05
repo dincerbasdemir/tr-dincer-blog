@@ -9,7 +9,7 @@ export default async function NewPostPage() {
   const { data: categories } = await supabase.from('categories').select('*').order('name')
 
   return (
-    <AdminShell>
+    <AdminShell currentPath="/admin/posts/new">
       <PostEditor categories={categories || []} />
     </AdminShell>
   )

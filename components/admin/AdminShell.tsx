@@ -1,21 +1,25 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
 
 const navItems = [
-  { href: '/admin', label: 'Yazılar', exact: true },
-  { href: '/admin/posts/new', label: 'Yeni Yazı', exact: false },
+  { href: '/admin', label: 'Yazılar' },
+  { href: '/admin/posts/new', label: 'Yeni Yazı' },
 ]
 
-export default function AdminShell({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname()
-  const router = useRouter()
-
+export default function AdminShell({
+  children,
+  currentPath = '',
+}: {
+  children: React.ReactNode
+  currentPath?: string
+}) {
   async function handleLogout() {
-    await fetch('/api/admin/auth', { method: 'DELETE' })
-    router.push('/admin/login')
-    router.refresh()
+    try {
+      await fetch('/api/admin/auth', { method: 'DELETE' })
+    } finally {
+      window.location.href = '/admin/login'
+    }
   }
 
   return (
@@ -52,9 +56,9 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
 
         <nav style={{ padding: '14px 10px', flex: 1 }}>
           {navItems.map(item => {
-            const isActive = item.exact
-              ? pathname === item.href
-              : pathname.startsWith(item.href) && item.href !== '/admin'
+            const isActive = item.href === '/admin'
+              ? currentPath === '/admin'
+              : currentPath.startsWith(item.href)
             return (
               <Link
                 key={item.href}

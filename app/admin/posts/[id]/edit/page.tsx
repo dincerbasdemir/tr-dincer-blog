@@ -16,7 +16,7 @@ export default async function EditPostPage({ params }: { params: { id: string } 
   if (!post) notFound()
 
   return (
-    <AdminShell>
+    <AdminShell currentPath={`/admin/posts/${params.id}/edit`}>
       <PostEditor post={post} categories={categories || []} />
     </AdminShell>
   )

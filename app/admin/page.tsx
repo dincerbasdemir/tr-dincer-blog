@@ -3,22 +3,27 @@ import AdminShell from '@/components/admin/AdminShell'
 import Link from 'next/link'
 import { format } from 'date-fns'
 import { tr } from 'date-fns/locale'
+import { headers } from 'next/headers'
 
 export const dynamic = 'force-dynamic'
 
 export default async function AdminDashboard() {
   const supabase = createAdminClient()
-  const { data: posts, error } = await supabase
+
+  // Don't select 'status' — column may not exist yet in DB
+  const { data: posts } = await supabase
     .from('posts')
-    .select('id, title, slug, published_at, categories, status')
+    .select('id, title, slug, published_at, categories')
     .order('published_at', { ascending: false })
 
   const allPosts = posts || []
-  const publishedCount = allPosts.filter(p => p.status !== 'draft').length
-  const draftCount = allPosts.filter(p => p.status === 'draft').length
+
+  // Pass current path from server to avoid usePathname() in client component
+  const headersList = headers()
+  const currentPath = headersList.get('x-invoke-path') || '/admin'
 
   return (
-    <AdminShell>
+    <AdminShell currentPath="/admin">
       <div style={{ padding: '36px 40px' }}>
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '28px' }}>
@@ -28,12 +33,6 @@ export default async function AdminDashboard() {
             </h1>
             <p style={{ fontSize: '13px', color: '#9ca3af', margin: 0 }}>
               {allPosts.length} yazı
-              {publishedCount > 0 && (
-                <> · <span style={{ color: '#16a34a' }}>{publishedCount} yayında</span></>
-              )}
-              {draftCount > 0 && (
-                <> · <span style={{ color: '#d97706' }}>{draftCount} taslak</span></>
-              )}
             </p>
           </div>
           <Link
@@ -49,15 +48,6 @@ export default async function AdminDashboard() {
           </Link>
         </div>
 
-        {error && (
-          <div style={{
-            backgroundColor: '#fef2f2', border: '1px solid #fecaca', borderRadius: '8px',
-            padding: '12px 16px', marginBottom: '20px', fontSize: '13px', color: '#dc2626',
-          }}>
-            Hata: {error.message}
-          </div>
-        )}
-
         {/* Table */}
         <div style={{ backgroundColor: 'white', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
           {allPosts.length === 0 ? (
@@ -72,7 +62,7 @@ export default async function AdminDashboard() {
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
-                  {['Başlık', 'Kategori', 'Tarih', 'Durum', ''].map(h => (
+                  {['Başlık', 'Kategori', 'Tarih', ''].map(h => (
                     <th key={h} style={{
                       padding: '12px 20px', textAlign: 'left',
                       fontSize: '11px', fontWeight: 700, color: '#9ca3af',
@@ -86,7 +76,7 @@ export default async function AdminDashboard() {
               <tbody>
                 {allPosts.map((post, i) => (
                   <tr key={post.id} style={{ borderBottom: i < allPosts.length - 1 ? '1px solid #f9fafb' : 'none' }}>
-                    <td style={{ padding: '14px 20px', maxWidth: '420px' }}>
+                    <td style={{ padding: '14px 20px', maxWidth: '440px' }}>
                       <div style={{ fontSize: '14px', fontWeight: 600, color: '#111827', lineHeight: 1.4, wordBreak: 'break-word' }}>
                         {post.title}
                       </div>
@@ -103,15 +93,6 @@ export default async function AdminDashboard() {
                     </td>
                     <td style={{ padding: '14px 20px', fontSize: '13px', color: '#6b7280', whiteSpace: 'nowrap' }}>
                       {post.published_at ? format(new Date(post.published_at), 'd MMM yyyy', { locale: tr }) : '—'}
-                    </td>
-                    <td style={{ padding: '14px 20px', whiteSpace: 'nowrap' }}>
-                      <span style={{
-                        fontSize: '11px', fontWeight: 600, padding: '3px 10px', borderRadius: '999px',
-                        backgroundColor: post.status === 'draft' ? '#fef3c7' : '#dcfce7',
-                        color: post.status === 'draft' ? '#92400e' : '#166534',
-                      }}>
-                        {post.status === 'draft' ? 'Taslak' : 'Yayında'}
-                      </span>
                     </td>
                     <td style={{ padding: '14px 20px' }}>
                       <div style={{ display: 'flex', gap: '6px', justifyContent: 'flex-end' }}>
