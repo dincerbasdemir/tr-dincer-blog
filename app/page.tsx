@@ -37,8 +37,8 @@ export default async function Home() {
       {featured && (
         <Link href={`/${featured.slug}`} className="group block mb-6">
           <div
-            className="bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all duration-200 p-6 md:p-8"
-            style={{ borderRadius: '4px' }}
+            className="bg-white hover:shadow-sm transition-all duration-200 p-6 md:p-8"
+            style={{ borderRadius: '2px', border: '1px solid #ebebeb' }}
           >
             <span className="inline-block text-[11px] font-semibold tracking-widest uppercase text-gray-400 mb-5">
               Son Yazı
@@ -66,8 +66,8 @@ export default async function Home() {
 
               <div className="flex-1 min-w-0 flex flex-col justify-between" style={{ height: '160px' }}>
                 <h2
-                  className="font-semibold text-gray-900 group-hover:text-gray-500 transition-colors text-balance"
-                  style={{ fontSize: '28px', lineHeight: '36px' }}
+                  className="text-gray-900 group-hover:text-gray-500 transition-colors text-balance"
+                  style={{ fontSize: '28px', lineHeight: '36px', fontWeight: 700 }}
                 >
                   {featured.title}
                 </h2>

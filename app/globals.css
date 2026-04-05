@@ -32,7 +32,7 @@
 /* DM Sans başlıklar — ekrandaki değerlere göre */
 .prose h1 {
   font-family: var(--font-dm-sans), system-ui, sans-serif;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 41px;
   line-height: 51px;
   color: #000;
@@ -42,7 +42,7 @@
 
 .prose h2 {
   font-family: var(--font-dm-sans), system-ui, sans-serif;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 30px;
   line-height: 38px;
   color: #000;
@@ -52,7 +52,7 @@
 
 .prose h3 {
   font-family: var(--font-dm-sans), system-ui, sans-serif;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 24px;
   line-height: 32px;
   color: #111;
@@ -62,7 +62,7 @@
 
 .prose h4 {
   font-family: var(--font-dm-sans), system-ui, sans-serif;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 20px;
   line-height: 28px;
   color: #111;
@@ -120,7 +120,7 @@
 }
 
 .prose strong {
-  font-weight: 600;
+  font-weight: 700;
   color: #111;
 }
 

@@ -81,8 +81,8 @@ export default function PostGrid({
           <article key={post.id}>
             <Link
               href={`/${post.slug}`}
-              className="group flex gap-4 items-center bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all duration-200 p-4"
-              style={{ borderRadius: '4px' }}
+              className="group flex gap-4 items-center bg-white hover:shadow-sm transition-all duration-200 p-4"
+              style={{ borderRadius: '2px', border: '1px solid #ebebeb' }}
             >
               {/* Thumbnail */}
               {post.featured_image ? (
@@ -107,10 +107,11 @@ export default function PostGrid({
               {/* Text */}
               <div className="flex-1 min-w-0 flex flex-col gap-2" style={{ height: '120px', justifyContent: 'center' }}>
                 <h3
-                  className="font-semibold text-gray-900 group-hover:text-gray-500 transition-colors"
+                  className="text-gray-900 group-hover:text-gray-500 transition-colors"
                   style={{
                     fontSize: '17px',
                     lineHeight: '24px',
+                    fontWeight: 700,
                     display: '-webkit-box',
                     WebkitLineClamp: 3,
                     WebkitBoxOrient: 'vertical',
