@@ -9,66 +9,132 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-
   body {
     @apply font-sans;
   }
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-  .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .line-clamp-3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-}
-
-/* Article prose */
+/* ── Prose (tekil yazı içeriği) ── */
 .prose {
-  @apply max-w-none;
-}
-.prose p {
-  @apply text-gray-700 leading-relaxed;
-}
-.prose h2 {
-  @apply font-serif text-3xl font-semibold text-gray-900 mt-12 mb-5;
-}
-.prose h3 {
-  @apply font-serif text-2xl font-semibold text-gray-900 mt-8 mb-4;
-}
-.prose a {
-  @apply text-gray-900 underline underline-offset-2 hover:text-gray-500 transition-colors;
-}
-.prose blockquote {
-  @apply border-l-4 border-gray-200 pl-6 italic text-gray-600;
-}
-.prose img {
-  @apply rounded-xl shadow-sm;
-}
-.prose ul, .prose ol {
-  @apply my-6 space-y-2;
-}
-.prose code {
-  @apply bg-gray-100 text-gray-800 px-2 py-0.5 rounded text-sm;
-}
-.prose pre {
-  @apply bg-gray-900 text-gray-100 p-4 rounded-xl overflow-x-auto;
+  max-width: none;
+  color: #1a1a1a;
+  font-size: 20px;
+  line-height: 34px;
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
 }
 
+.prose p {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  color: #2d2d2d;
+}
+
+/* DM Sans başlıklar — ekrandaki değerlere göre */
+.prose h1 {
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 41px;
+  line-height: 51px;
+  color: #000;
+  margin-top: 2em;
+  margin-bottom: 0.75em;
+}
+
+.prose h2 {
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 38px;
+  color: #000;
+  margin-top: 2em;
+  margin-bottom: 0.75em;
+}
+
+.prose h3 {
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 32px;
+  color: #111;
+  margin-top: 1.75em;
+  margin-bottom: 0.6em;
+}
+
+.prose h4 {
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 28px;
+  color: #111;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.prose a {
+  color: #111;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+.prose a:hover {
+  color: #555;
+}
+
+.prose blockquote {
+  border-left: 3px solid #d1d5db;
+  padding-left: 1.5rem;
+  font-style: italic;
+  color: #4b5563;
+  margin: 2em 0;
+}
+
+.prose img {
+  border-radius: 4px;
+  max-width: 100%;
+}
+
+.prose ul, .prose ol {
+  padding-left: 1.5em;
+  margin: 1.25em 0;
+}
+.prose li {
+  margin: 0.4em 0;
+}
+
+.prose code {
+  background-color: #f3f4f6;
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+  font-size: 0.88em;
+  color: #1f2937;
+}
+
+.prose pre {
+  background-color: #111827;
+  color: #f3f4f6;
+  padding: 1.25rem 1.5rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 0.9em;
+  line-height: 1.7;
+}
+
+.prose strong {
+  font-weight: 600;
+  color: #111;
+}
+
+.prose hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 2.5em 0;
+}
+
+/* Animasyon */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 .fade-in {
-  animation: fadeIn 0.4s ease-out;
+  animation: fadeIn 0.35s ease-out;
 }

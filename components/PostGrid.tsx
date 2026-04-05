@@ -66,7 +66,6 @@ export default function PostGrid({
   useEffect(() => {
     const el = triggerRef.current
     if (!el) return
-
     const observer = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) loadMore() },
       { rootMargin: '300px' }
@@ -77,38 +76,55 @@ export default function PostGrid({
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {posts.map((post) => (
           <article key={post.id}>
             <Link
               href={`/${post.slug}`}
-              className="group flex gap-5 items-start bg-white rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-200 p-5"
+              className="group flex gap-4 items-center bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all duration-200 p-4"
+              style={{ borderRadius: '4px' }}
             >
               {/* Thumbnail */}
               {post.featured_image ? (
                 <img
                   src={post.featured_image}
                   alt={post.title}
-                  className="w-40 h-[112px] object-cover rounded-lg flex-shrink-0"
+                  className="flex-shrink-0 object-cover"
+                  style={{ width: '152px', height: '120px', borderRadius: '3px' }}
                 />
               ) : (
                 <div
-                  className="w-40 h-[112px] rounded-lg flex-shrink-0"
-                  style={{ backgroundColor: placeholderColor(post.title) }}
+                  className="flex-shrink-0"
+                  style={{
+                    width: '152px',
+                    height: '120px',
+                    borderRadius: '3px',
+                    backgroundColor: placeholderColor(post.title),
+                  }}
                 />
               )}
 
               {/* Text */}
-              <div className="flex-1 min-w-0 flex flex-col justify-between h-[112px]">
+              <div className="flex-1 min-w-0 flex flex-col gap-2" style={{ height: '120px', justifyContent: 'center' }}>
                 <h3
-                  className="font-semibold text-gray-900 group-hover:text-gray-500 transition-colors line-clamp-3"
-                  style={{ fontSize: '23px', lineHeight: '30px' }}
+                  className="font-semibold text-gray-900 group-hover:text-gray-500 transition-colors"
+                  style={{
+                    fontSize: '17px',
+                    lineHeight: '24px',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 3,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                  }}
                 >
                   {post.title}
                 </h3>
-                <div className="flex items-center gap-1.5 text-sm text-gray-400">
+                <div
+                  className="text-gray-400 flex items-center gap-1"
+                  style={{ fontSize: '12px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                >
                   <time dateTime={post.published_at}>
-                    {format(new Date(post.published_at), 'd MMM yyyy', { locale: tr })}
+                    {format(new Date(post.published_at), 'd MMM yy', { locale: tr })}
                   </time>
                   {post.reading_time && <><span>·</span><span>{post.reading_time}</span></>}
                   {post.categories?.[0] && <><span>·</span><span>{post.categories[0]}</span></>}
@@ -122,7 +138,7 @@ export default function PostGrid({
       {/* Scroll trigger */}
       <div ref={triggerRef} className="mt-10 flex justify-center h-8">
         {loading && (
-          <div className="w-6 h-6 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
+          <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
         )}
       </div>
     </>
