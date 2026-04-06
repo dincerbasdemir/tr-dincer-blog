@@ -74,11 +74,8 @@ export default function PostList({
               {/* Görsel */}
               {/* Mobil: 220px sabit yükseklik | Desktop: tam yükseklik, min 300px */}
               <div
-                className="sm:min-h-[300px]"
-                style={{
-                  position: 'relative',
-                  height: '220px',
-                }}
+                className="h-[220px] sm:h-auto sm:min-h-[300px]"
+                style={{ position: 'relative' }}
               >
                 {post.featured_image ? (
                   <img
