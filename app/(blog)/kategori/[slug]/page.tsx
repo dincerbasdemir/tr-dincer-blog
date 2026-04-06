@@ -57,7 +57,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
             fontWeight: 600,
             textTransform: 'uppercase',
             letterSpacing: '0.1em',
-            color: '#870500',
+            color: '#A30000',
             marginBottom: '12px',
           }}>
             Kategori
@@ -152,7 +152,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
                     gap: '4px',
                     fontSize: '13px',
                     fontWeight: 600,
-                    color: '#870500',
+                    color: '#A30000',
                     textDecoration: 'none',
                     letterSpacing: '0.02em',
                   }}
