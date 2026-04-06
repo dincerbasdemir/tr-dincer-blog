@@ -67,11 +67,11 @@ export default function PostList({
           <article key={post.id}>
             <Link
               href={`/${post.slug}`}
-              className="group hover:shadow-md transition-shadow duration-300 flex flex-col sm:grid sm:grid-cols-[46%_1fr]"
-              style={{ borderRadius: '12px', backgroundColor: 'white', textDecoration: 'none', overflow: 'hidden' }}
+              className="group hover:shadow-md transition-shadow duration-300 flex flex-col sm:grid sm:grid-cols-[48%_1fr]"
+              style={{ borderRadius: '12px', backgroundColor: 'white', textDecoration: 'none', overflow: 'hidden', minHeight: '0' }}
             >
               {/* Görsel */}
-              <div style={{ position: 'relative', height: '220px' }} className="sm:h-auto sm:min-h-[280px]">
+              <div style={{ position: 'relative', height: '220px' }} className="sm:h-auto sm:min-h-[300px]">
                 {post.featured_image ? (
                   <img
                     src={post.featured_image}
@@ -84,15 +84,15 @@ export default function PostList({
               </div>
 
               {/* İçerik */}
-              <div className="flex flex-col justify-between p-5 sm:p-8">
+              <div className="flex flex-col justify-between p-5 sm:p-9">
                 <div>
                   {/* Kategori */}
                   {post.categories?.[0] && (
-                    <div className="flex items-center gap-1.5 mb-2.5">
+                    <div className="flex items-center gap-1.5 mb-3">
                       <svg className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#A30000' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                       </svg>
-                      <span style={{ fontSize: '12px', fontWeight: 600, color: '#A30000' }}>
+                      <span style={{ fontSize: '13px', fontWeight: 600, color: '#A30000' }}>
                         {post.categories[0]}
                       </span>
                     </div>
@@ -100,8 +100,8 @@ export default function PostList({
 
                   {/* Başlık */}
                   <h2
-                    className="group-hover:text-gray-600 transition-colors mb-3"
-                    style={{ fontSize: '22px', lineHeight: '30px', fontWeight: 800, color: '#111827', letterSpacing: '-0.02em' }}
+                    className="group-hover:text-gray-600 transition-colors mb-4 text-[22px] leading-[30px] sm:text-[26px] sm:leading-[34px]"
+                    style={{ fontWeight: 800, color: '#111827', letterSpacing: '-0.02em' }}
                   >
                     {post.title}
                   </h2>
@@ -110,8 +110,8 @@ export default function PostList({
                   {post.excerpt && (
                     <p
                       style={{
-                        fontSize: '14px',
-                        lineHeight: '22px',
+                        fontSize: '15px',
+                        lineHeight: '24px',
                         color: '#6b7280',
                         display: '-webkit-box',
                         WebkitLineClamp: 3,
@@ -125,7 +125,7 @@ export default function PostList({
                 </div>
 
                 {/* Alt: Yazar + Tarih */}
-                <div className="flex items-center gap-2 mt-4 flex-wrap">
+                <div className="flex items-center gap-2 mt-5 flex-wrap">
                   {authorPhoto ? (
                     <img
                       src={authorPhoto}
