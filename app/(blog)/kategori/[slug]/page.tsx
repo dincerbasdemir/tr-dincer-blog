@@ -115,18 +115,14 @@ export default async function CategoryPage({ params }: { params: { slug: string 
 
                 {/* Başlık */}
                 <Link href={`/${post.slug}`} style={{ textDecoration: 'none' }}>
-                  <h2 style={{
+                  <h2 className="category-post-title" style={{
                     fontSize: '26px',
                     lineHeight: '34px',
                     fontWeight: 800,
                     letterSpacing: '-0.02em',
                     color: '#1b1c1c',
                     margin: '0 0 10px',
-                    transition: 'color 0.15s',
-                  }}
-                  onMouseEnter={e => (e.currentTarget.style.color = '#5f5e5e')}
-                  onMouseLeave={e => (e.currentTarget.style.color = '#1b1c1c')}
-                  >
+                  }}>
                     {post.title}
                   </h2>
                 </Link>

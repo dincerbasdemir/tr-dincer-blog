@@ -171,6 +171,10 @@
   margin: 4rem 0;
 }
 
+/* Kategori sayfası — yazı başlığı hover */
+.category-post-title { transition: color 0.15s; }
+.category-post-title:hover { color: #5f5e5e !important; }
+
 /* Animasyon */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(6px); }
