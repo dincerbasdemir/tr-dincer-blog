@@ -34,3 +34,12 @@ export type Page = {
   created_at: string
   updated_at: string
 }
+
+export async function getSiteSettings(): Promise<Record<string, string>> {
+  const { data } = await supabase
+    .from('site_settings')
+    .select('key, value')
+  const settings: Record<string, string> = {}
+  data?.forEach(row => { settings[row.key] = row.value || '' })
+  return settings
+}

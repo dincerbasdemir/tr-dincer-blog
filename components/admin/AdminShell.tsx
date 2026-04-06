@@ -2,9 +2,29 @@
 
 import Link from 'next/link'
 
-const navItems = [
-  { href: '/admin', label: 'Yazılar' },
-  { href: '/admin/posts/new', label: 'Yeni Yazı' },
+const navGroups = [
+  {
+    items: [
+      { href: '/admin', label: 'Yazılar', exact: true },
+      { href: '/admin/posts/new', label: 'Yeni Yazı', exact: true },
+    ],
+  },
+  {
+    items: [
+      { href: '/admin/pages', label: 'Sayfalar' },
+      { href: '/admin/pages/new', label: 'Yeni Sayfa', exact: true },
+    ],
+  },
+  {
+    items: [
+      { href: '/admin/categories', label: 'Kategoriler' },
+    ],
+  },
+  {
+    items: [
+      { href: '/admin/settings', label: 'Ayarlar' },
+    ],
+  },
 ]
 
 export default function AdminShell({
@@ -55,32 +75,39 @@ export default function AdminShell({
         </div>
 
         <nav style={{ padding: '14px 10px', flex: 1 }}>
-          {navItems.map(item => {
-            const isActive = item.href === '/admin'
-              ? currentPath === '/admin'
-              : currentPath.startsWith(item.href)
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  padding: '9px 12px',
-                  borderRadius: '8px',
-                  textDecoration: 'none',
-                  fontSize: '14px',
-                  fontWeight: isActive ? 600 : 400,
-                  color: isActive ? 'white' : 'rgba(255,255,255,0.5)',
-                  backgroundColor: isActive ? 'rgba(255,255,255,0.09)' : 'transparent',
-                  marginBottom: '2px',
-                }}
-              >
-                {item.label}
-              </Link>
-            )
-          })}
+          {navGroups.map((group, gi) => (
+            <div key={gi}>
+              {gi > 0 && (
+                <div style={{ height: '1px', backgroundColor: 'rgba(255,255,255,0.07)', margin: '8px 12px' }} />
+              )}
+              {group.items.map(item => {
+                const isActive = item.exact
+                  ? currentPath === item.href
+                  : currentPath.startsWith(item.href)
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      padding: '9px 12px',
+                      borderRadius: '8px',
+                      textDecoration: 'none',
+                      fontSize: '14px',
+                      fontWeight: isActive ? 600 : 400,
+                      color: isActive ? 'white' : 'rgba(255,255,255,0.5)',
+                      backgroundColor: isActive ? 'rgba(255,255,255,0.09)' : 'transparent',
+                      marginBottom: '2px',
+                    }}
+                  >
+                    {item.label}
+                  </Link>
+                )
+              })}
+            </div>
+          ))}
         </nav>
 
         <div style={{ padding: '12px 10px 20px', borderTop: '1px solid rgba(255,255,255,0.07)' }}>

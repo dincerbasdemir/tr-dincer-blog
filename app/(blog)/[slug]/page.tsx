@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { supabase, getSiteSettings } from '@/lib/supabase'
 import { notFound } from 'next/navigation'
 import { format } from 'date-fns'
 import { tr } from 'date-fns/locale'
@@ -30,8 +30,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
-  const post = await getPost(params.slug)
+  const [post, settings] = await Promise.all([getPost(params.slug), getSiteSettings()])
   if (!post) notFound()
+
+  const authorName = settings.author_name || 'Dinçer'
+  const authorPhoto = settings.author_photo || ''
 
   return (
     <div style={{ backgroundColor: '#fbf9f8', minHeight: '100vh' }}>
@@ -80,10 +83,22 @@ export default async function PostPage({ params }: { params: { slug: string } })
             borderBottom: '1px solid rgba(195,198,214,0.35)',
           }}
         >
-          <div>
-            <div className="text-sm font-bold" style={{ color: '#1b1c1c' }}>Dinçer</div>
-            <div className="text-xs" style={{ color: '#5f5e5e' }}>
-              {format(new Date(post.published_at), 'd MMMM yyyy', { locale: tr })}
+          <div className="flex items-center gap-3">
+            {authorPhoto ? (
+              <img src={authorPhoto} alt={authorName} className="w-9 h-9 rounded-full object-cover" />
+            ) : (
+              <div
+                className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold"
+                style={{ backgroundColor: '#1b1c1c', fontSize: '13px' }}
+              >
+                {authorName.charAt(0).toUpperCase()}
+              </div>
+            )}
+            <div>
+              <div className="text-sm font-bold" style={{ color: '#1b1c1c' }}>{authorName}</div>
+              <div className="text-xs" style={{ color: '#5f5e5e' }}>
+                {format(new Date(post.published_at), 'd MMMM yyyy', { locale: tr })}
+              </div>
             </div>
           </div>
           <a

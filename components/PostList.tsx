@@ -30,9 +30,13 @@ const PAGE_SIZE = 10
 export default function PostList({
   initialPosts,
   initialOffset,
+  authorName = 'Dinçer',
+  authorPhoto = '',
 }: {
   initialPosts: Post[]
   initialOffset: number
+  authorName?: string
+  authorPhoto?: string
 }) {
   const [posts, setPosts] = useState<Post[]>(initialPosts)
   const [loading, setLoading] = useState(false)
@@ -123,13 +127,21 @@ export default function PostList({
                 {/* Alt: Yazar + Tarih */}
                 <div className="flex items-center justify-between mt-5">
                   <div className="flex items-center gap-2">
-                    <div
-                      className="w-7 h-7 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0"
-                      style={{ backgroundColor: '#1b1c1c', fontSize: '11px' }}
-                    >
-                      D
-                    </div>
-                    <span style={{ fontSize: '13px', fontWeight: 600, color: '#374151' }}>Dinçer</span>
+                    {authorPhoto ? (
+                      <img
+                        src={authorPhoto}
+                        alt={authorName}
+                        className="w-7 h-7 rounded-full object-cover flex-shrink-0"
+                      />
+                    ) : (
+                      <div
+                        className="w-7 h-7 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0"
+                        style={{ backgroundColor: '#1b1c1c', fontSize: '11px' }}
+                      >
+                        {authorName.charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                    <span style={{ fontSize: '13px', fontWeight: 600, color: '#374151' }}>{authorName}</span>
                   </div>
                   <time
                     dateTime={post.published_at}
