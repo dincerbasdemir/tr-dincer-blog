@@ -71,16 +71,15 @@ export default function PostList({
               style={{ borderRadius: '12px', backgroundColor: 'white', textDecoration: 'none', overflow: 'hidden', minHeight: '0' }}
             >
               {/* Görsel */}
-              <div
-                style={{ position: 'relative', height: '220px', backgroundColor: placeholderColor(post.title) }}
-                className="sm:h-auto sm:min-h-[300px]"
-              >
-                {post.featured_image && (
+              <div style={{ position: 'relative', height: '220px' }} className="sm:h-auto sm:min-h-[300px]">
+                {post.featured_image ? (
                   <img
                     src={post.featured_image}
                     alt={post.title}
-                    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', display: 'block', border: 'none', outline: 'none' }}
+                    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block', border: 'none', outline: 'none' }}
                   />
+                ) : (
+                  <div style={{ position: 'absolute', inset: 0, backgroundColor: placeholderColor(post.title) }} />
                 )}
               </div>
 
