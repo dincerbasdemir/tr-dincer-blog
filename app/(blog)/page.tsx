@@ -103,18 +103,16 @@ export default async function Home() {
         {/* Başlık */}
         <h1
           className="mb-4 text-balance"
-          style={{ fontSize: '52px', lineHeight: '60px', fontWeight: 800, letterSpacing: '-0.03em', color: '#111827', maxWidth: '700px' }}
+          style={{ fontSize: '52px', lineHeight: '72px', fontWeight: 800, letterSpacing: '-0.03em', color: '#111827', maxWidth: '700px' }}
         >
           {mainTagline}{mainTagline ? ' ' : ''}
           <span style={{
             backgroundColor: 'rgba(163, 0, 0, 0.12)',
             borderRadius: '8px',
-            padding: '2px 10px',
+            padding: '4px 14px',
             color: '#A30000',
-            display: 'inline',
             boxDecorationBreak: 'clone' as const,
             WebkitBoxDecorationBreak: 'clone' as const,
-            lineHeight: '1.25',
           }}>
             {highlightWords}
           </span>
