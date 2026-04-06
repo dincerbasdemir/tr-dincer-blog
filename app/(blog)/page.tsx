@@ -109,7 +109,7 @@ export default async function Home() {
           <span style={{
             backgroundColor: 'rgba(163, 0, 0, 0.12)',
             borderRadius: '8px',
-            padding: '4px 14px',
+            padding: '6px 14px 2px',
             color: '#A30000',
             boxDecorationBreak: 'clone' as const,
             WebkitBoxDecorationBreak: 'clone' as const,
