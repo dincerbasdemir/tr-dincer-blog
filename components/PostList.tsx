@@ -65,13 +65,21 @@ export default function PostList({
       <div className="flex flex-col gap-4">
         {posts.map((post) => (
           <article key={post.id}>
+            {/* Kart: mobil = dikey yığın, desktop = yan yana grid */}
             <Link
               href={`/${post.slug}`}
               className="group hover:shadow-md transition-shadow duration-300 flex flex-col sm:grid sm:grid-cols-[48%_1fr]"
-              style={{ borderRadius: '12px', backgroundColor: 'white', textDecoration: 'none', overflow: 'hidden', minHeight: '0' }}
+              style={{ borderRadius: '12px', backgroundColor: 'white', minHeight: 0, overflow: 'hidden' }}
             >
               {/* Görsel */}
-              <div style={{ position: 'relative', height: '220px' }} className="sm:h-auto sm:min-h-[300px]">
+              {/* Mobil: 220px sabit yükseklik | Desktop: tam yükseklik, min 300px */}
+              <div
+                className="sm:min-h-[300px]"
+                style={{
+                  position: 'relative',
+                  height: '220px',
+                }}
+              >
                 {post.featured_image ? (
                   <img
                     src={post.featured_image}
@@ -84,7 +92,8 @@ export default function PostList({
               </div>
 
               {/* İçerik */}
-              <div className="flex flex-col justify-between p-5 sm:p-9">
+              {/* Mobil: p-5, desktop: p-9 */}
+              <div className="flex-1 flex flex-col justify-between p-5 sm:p-9">
                 <div>
                   {/* Kategori */}
                   {post.categories?.[0] && (
@@ -98,7 +107,7 @@ export default function PostList({
                     </div>
                   )}
 
-                  {/* Başlık */}
+                  {/* Başlık: mobil 22px, desktop 26px */}
                   <h2
                     className="group-hover:text-gray-600 transition-colors mb-4 text-[22px] leading-[30px] sm:text-[26px] sm:leading-[34px]"
                     style={{ fontWeight: 800, color: '#111827', letterSpacing: '-0.02em' }}
@@ -125,23 +134,25 @@ export default function PostList({
                 </div>
 
                 {/* Alt: Yazar + Tarih */}
-                <div className="flex items-center gap-2 mt-5 flex-wrap">
-                  {authorPhoto ? (
-                    <img
-                      src={authorPhoto}
-                      alt={authorName}
-                      className="w-7 h-7 rounded-full object-cover flex-shrink-0"
-                    />
-                  ) : (
-                    <div
-                      className="w-7 h-7 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0"
-                      style={{ backgroundColor: '#1b1c1c', fontSize: '11px' }}
-                    >
-                      {authorName.charAt(0).toUpperCase()}
-                    </div>
-                  )}
-                  <span style={{ fontSize: '13px', fontWeight: 600, color: '#374151' }}>{authorName}</span>
-                  <span style={{ fontSize: '13px', color: '#d1d5db' }}>·</span>
+                {/* Mobil: yazar+tarih yan yana sarmalı | Desktop: iki uca yasla */}
+                <div className="flex items-center justify-between mt-5 flex-wrap gap-2">
+                  <div className="flex items-center gap-2">
+                    {authorPhoto ? (
+                      <img
+                        src={authorPhoto}
+                        alt={authorName}
+                        className="w-7 h-7 rounded-full object-cover flex-shrink-0"
+                      />
+                    ) : (
+                      <div
+                        className="w-7 h-7 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0"
+                        style={{ backgroundColor: '#1b1c1c', fontSize: '11px' }}
+                      >
+                        {authorName.charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                    <span style={{ fontSize: '13px', fontWeight: 600, color: '#374151' }}>{authorName}</span>
+                  </div>
                   <time
                     dateTime={post.published_at}
                     style={{ fontSize: '13px', color: '#9ca3af' }}
