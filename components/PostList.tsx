@@ -120,7 +120,7 @@ export default function PostList({
                         lineHeight: '24px',
                         color: '#6b7280',
                         display: '-webkit-box',
-                        WebkitLineClamp: 2,
+                        WebkitLineClamp: 3,
                         WebkitBoxOrient: 'vertical',
                         overflow: 'hidden',
                       }}
