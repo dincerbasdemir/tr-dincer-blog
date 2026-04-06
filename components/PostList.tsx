@@ -68,7 +68,7 @@ export default function PostList({
             {/* Kart: mobil = dikey yığın, desktop = yan yana grid */}
             <Link
               href={`/${post.slug}`}
-              className="group hover:shadow-md transition-shadow duration-300 flex flex-col sm:grid sm:grid-cols-[48%_1fr] sm:h-[300px]"
+              className="group hover:shadow-md transition-shadow duration-300 flex flex-col sm:grid sm:grid-cols-[48%_1fr] sm:h-[360px]"
               style={{ borderRadius: '12px', backgroundColor: 'white', overflow: 'hidden' }}
             >
               {/* Görsel */}
@@ -106,7 +106,7 @@ export default function PostList({
 
                   {/* Başlık: mobil 22px, desktop 26px — max 2 satır */}
                   <h2
-                    className="group-hover:text-gray-600 transition-colors mb-4 text-[22px] leading-[30px] sm:text-[26px] sm:leading-[34px] sm:line-clamp-2"
+                    className="group-hover:text-gray-600 transition-colors mb-4 text-[22px] leading-[30px] sm:text-[26px] sm:leading-[34px] sm:line-clamp-3"
                     style={{ fontWeight: 800, color: '#111827', letterSpacing: '-0.02em' }}
                   >
                     {post.title}
