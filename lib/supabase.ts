@@ -36,10 +36,15 @@ export type Page = {
 }
 
 export async function getSiteSettings(): Promise<Record<string, string>> {
-  const { data } = await supabase
-    .from('site_settings')
-    .select('key, value')
-  const settings: Record<string, string> = {}
-  data?.forEach(row => { settings[row.key] = row.value || '' })
-  return settings
+  try {
+    const { data, error } = await supabase
+      .from('site_settings')
+      .select('key, value')
+    if (error) return {}
+    const settings: Record<string, string> = {}
+    data?.forEach(row => { settings[row.key] = row.value || '' })
+    return settings
+  } catch {
+    return {}
+  }
 }

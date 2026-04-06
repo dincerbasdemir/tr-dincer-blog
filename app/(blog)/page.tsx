@@ -44,10 +44,14 @@ export default async function Home() {
     .filter(([key]) => settings[key])
     .map(([key, icon]) => ({ key, url: settings[key], ...icon }))
 
-  // Split tagline for highlight effect — last word gets highlighted
+  // Split tagline — son 2 kelime highlight olacak
   const taglineWords = siteTagline.split(' ')
-  const lastWord = taglineWords.pop() || ''
-  const mainTagline = taglineWords.join(' ')
+  const highlightWords = taglineWords.length >= 2
+    ? taglineWords.slice(-2).join(' ')
+    : taglineWords.pop() || ''
+  const mainTagline = taglineWords.length >= 2
+    ? taglineWords.slice(0, -2).join(' ')
+    : ''
 
   return (
     <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
@@ -101,9 +105,18 @@ export default async function Home() {
           className="mb-4 text-balance"
           style={{ fontSize: '52px', lineHeight: '60px', fontWeight: 800, letterSpacing: '-0.03em', color: '#111827', maxWidth: '700px' }}
         >
-          {mainTagline}{' '}
-          <span style={{ backgroundColor: '#dbeafe', borderRadius: '6px', padding: '0 6px' }}>
-            {lastWord}
+          {mainTagline}{mainTagline ? ' ' : ''}
+          <span style={{
+            backgroundColor: 'rgba(163, 0, 0, 0.12)',
+            borderRadius: '8px',
+            padding: '2px 10px',
+            color: '#A30000',
+            display: 'inline',
+            boxDecorationBreak: 'clone' as const,
+            WebkitBoxDecorationBreak: 'clone' as const,
+            lineHeight: '1.25',
+          }}>
+            {highlightWords}
           </span>
         </h1>
 
