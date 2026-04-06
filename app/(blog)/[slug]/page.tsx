@@ -126,8 +126,8 @@ export default async function PostPage({ params }: { params: { slug: string } })
         {/* Excerpt — italic lead */}
         {post.excerpt && (
           <p
-            className="italic mb-10"
-            style={{ fontSize: '21px', lineHeight: '34px', color: '#5f5e5e' }}
+            className="mb-10"
+            style={{ fontSize: '20px', lineHeight: '32px', color: '#5f5e5e' }}
           >
             {post.excerpt}
           </p>
