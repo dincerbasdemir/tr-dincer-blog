@@ -14,23 +14,71 @@ async function getPost(slug: string) {
   return data
 }
 
+async function getPage(slug: string) {
+  const { data, error } = await supabase
+    .from('pages')
+    .select('*')
+    .eq('slug', slug)
+    .single()
+  if (error) return null
+  return data
+}
+
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const post = await getPost(params.slug)
-  if (!post) return { title: 'Yazı bulunamadı' }
-  return {
-    title: `${post.title} - tr.dincer`,
-    description: post.excerpt || post.title,
-    openGraph: {
-      title: post.title,
+  if (post) {
+    return {
+      title: `${post.title} - tr.dincer`,
       description: post.excerpt || post.title,
-      type: 'article',
-      publishedTime: post.published_at,
-    },
+      openGraph: {
+        title: post.title,
+        description: post.excerpt || post.title,
+        type: 'article',
+        publishedTime: post.published_at,
+      },
+    }
+  }
+  const page = await getPage(params.slug)
+  if (!page) return { title: 'Sayfa bulunamadı' }
+  return {
+    title: `${page.title} - tr.dincer`,
+    description: page.title,
   }
 }
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
-  const [post, settings] = await Promise.all([getPost(params.slug), getSiteSettings()])
+  const [post, page, settings] = await Promise.all([getPost(params.slug), getPage(params.slug), getSiteSettings()])
+
+  // Eğer post yoksa ama page varsa, sayfa olarak render et
+  if (!post && page) {
+    return (
+      <div style={{ backgroundColor: '#fbf9f8', minHeight: '100vh' }}>
+        <article className="max-w-[740px] mx-auto px-5 pt-14 pb-24">
+          <a
+            href="/"
+            className="text-xs font-semibold uppercase tracking-widest transition-colors hover:text-gray-900 inline-block mb-10"
+            style={{ color: '#5f5e5e' }}
+          >
+            ← Ana Sayfa
+          </a>
+          <h1
+            style={{
+              fontSize: '45px',
+              lineHeight: '54px',
+              fontWeight: 800,
+              letterSpacing: '-0.02em',
+              color: '#1b1c1c',
+              marginBottom: '48px',
+            }}
+          >
+            {page.title}
+          </h1>
+          <div className="prose article-body" dangerouslySetInnerHTML={{ __html: page.content }} />
+        </article>
+      </div>
+    )
+  }
+
   if (!post) notFound()
 
   const authorName = settings.author_name || 'Dinçer'

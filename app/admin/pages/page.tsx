@@ -1,5 +1,6 @@
 import { createAdminClient } from '@/lib/supabase-admin'
 import AdminShell from '@/components/admin/AdminShell'
+import DeletePageButton from '@/components/admin/DeletePageButton'
 import Link from 'next/link'
 import { format } from 'date-fns'
 import { tr } from 'date-fns/locale'
@@ -101,6 +102,7 @@ export default async function AdminPagesPage() {
                         <a href={`/${page.slug}`} target="_blank" rel="noopener noreferrer" style={{ fontSize: '12px', color: '#9ca3af', textDecoration: 'none', padding: '5px 10px', border: '1px solid #e5e7eb', borderRadius: '6px' }}>
                           ↗
                         </a>
+                        <DeletePageButton id={page.id} title={page.title} />
                       </div>
                     </td>
                   </tr>
