@@ -179,7 +179,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
             <img
               src={post.featured_image}
               alt={post.title}
-              style={{ display: 'block', width: '100%', height: 'auto', border: 'none', outline: 'none', borderRadius: 0, boxShadow: 'none', verticalAlign: 'bottom', clipPath: 'inset(1px)' }}
+              style={{ display: 'block', width: '100%', height: 'auto', border: 'none', outline: 'none', borderRadius: 0, boxShadow: 'none', verticalAlign: 'bottom' }}
             />
           </div>
         )}
