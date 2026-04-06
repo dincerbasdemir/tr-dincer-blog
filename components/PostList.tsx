@@ -68,13 +68,13 @@ export default function PostList({
             {/* Kart: mobil = dikey yığın, desktop = yan yana grid */}
             <Link
               href={`/${post.slug}`}
-              className="group hover:shadow-md transition-shadow duration-300 flex flex-col sm:grid sm:grid-cols-[48%_1fr]"
-              style={{ borderRadius: '12px', backgroundColor: 'white', minHeight: 0, overflow: 'hidden' }}
+              className="group hover:shadow-md transition-shadow duration-300 flex flex-col sm:grid sm:grid-cols-[48%_1fr] sm:h-[300px]"
+              style={{ borderRadius: '12px', backgroundColor: 'white', overflow: 'hidden' }}
             >
               {/* Görsel */}
               {/* Mobil: 220px sabit yükseklik | Desktop: tam yükseklik, min 300px */}
               <div
-                className="h-[220px] sm:h-auto sm:min-h-[300px]"
+                className="h-[220px] sm:h-full"
                 style={{ position: 'relative' }}
               >
                 {post.featured_image ? (
@@ -104,9 +104,9 @@ export default function PostList({
                     </div>
                   )}
 
-                  {/* Başlık: mobil 22px, desktop 26px */}
+                  {/* Başlık: mobil 22px, desktop 26px — max 2 satır */}
                   <h2
-                    className="group-hover:text-gray-600 transition-colors mb-4 text-[22px] leading-[30px] sm:text-[26px] sm:leading-[34px]"
+                    className="group-hover:text-gray-600 transition-colors mb-4 text-[22px] leading-[30px] sm:text-[26px] sm:leading-[34px] sm:line-clamp-2"
                     style={{ fontWeight: 800, color: '#111827', letterSpacing: '-0.02em' }}
                   >
                     {post.title}
@@ -120,7 +120,7 @@ export default function PostList({
                         lineHeight: '24px',
                         color: '#6b7280',
                         display: '-webkit-box',
-                        WebkitLineClamp: 3,
+                        WebkitLineClamp: 2,
                         WebkitBoxOrient: 'vertical',
                         overflow: 'hidden',
                       }}
