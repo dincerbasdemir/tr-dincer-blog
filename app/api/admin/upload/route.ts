@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase-admin'
+import sharp from 'sharp'
 
 export async function POST(request: NextRequest) {
   const formData = await request.formData()
@@ -9,18 +10,43 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Dosya bulunamadı' }, { status: 400 })
   }
 
-  const supabase = createAdminClient()
-  const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg'
-  const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
-
   const bytes = await file.arrayBuffer()
-  const buffer = Buffer.from(bytes)
+  const inputBuffer = Buffer.from(bytes)
+
+  const mime = file.type.toLowerCase()
+  let outputBuffer: Buffer
+  let contentType: string
+  let ext: string
+
+  if (mime === 'image/png') {
+    // PNG → kayıpsız WebP
+    outputBuffer = await sharp(inputBuffer)
+      .webp({ lossless: true, effort: 6 })
+      .toBuffer()
+    contentType = 'image/webp'
+    ext = 'webp'
+  } else if (mime === 'image/gif') {
+    // GIF → olduğu gibi bırak (animasyon kaybı olmasın)
+    outputBuffer = inputBuffer
+    contentType = 'image/gif'
+    ext = 'gif'
+  } else {
+    // JPEG, WebP, AVIF vs. → yüksek kalite WebP (görsel kayıp minimumdur)
+    outputBuffer = await sharp(inputBuffer)
+      .webp({ quality: 90, effort: 6 })
+      .toBuffer()
+    contentType = 'image/webp'
+    ext = 'webp'
+  }
+
+  const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+  const supabase = createAdminClient()
 
   const { error } = await supabase.storage
     .from('post-images')
-    .upload(filename, buffer, {
-      contentType: file.type,
-      cacheControl: '3600',
+    .upload(filename, outputBuffer, {
+      contentType,
+      cacheControl: '31536000',
       upsert: false,
     })
 
