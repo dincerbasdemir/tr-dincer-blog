@@ -6,6 +6,7 @@ async function getPosts() {
   const { data, error } = await supabase
     .from('posts')
     .select('id, title, slug, excerpt, published_at, categories, reading_time, featured_image')
+    .eq('status', 'published')
     .order('published_at', { ascending: false })
     .limit(10)
   if (error) return []

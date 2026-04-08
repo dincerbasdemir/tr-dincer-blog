@@ -32,6 +32,7 @@ function SearchResults() {
       const { data, error } = await supabase
         .from('posts')
         .select('id, title, slug, excerpt, published_at, reading_time, categories')
+        .eq('status', 'published')
         .or(`title.ilike.%${query}%,content.ilike.%${query}%,excerpt.ilike.%${query}%`)
         .order('published_at', { ascending: false })
         .limit(20)

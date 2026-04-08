@@ -9,6 +9,7 @@ async function getPost(slug: string) {
     .from('posts')
     .select('*')
     .eq('slug', slug)
+    .eq('status', 'published')
     .single()
   if (error) return null
   return data

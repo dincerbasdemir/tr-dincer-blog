@@ -24,6 +24,7 @@ async function getPostsByCategory(categorySlug: string) {
   const { data, error } = await supabase
     .from('posts')
     .select('id, title, slug, excerpt, published_at, reading_time, categories')
+    .eq('status', 'published')
     .contains('categories', [categoryName])
     .order('published_at', { ascending: false })
 
