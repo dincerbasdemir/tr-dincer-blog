@@ -97,7 +97,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
 
   return (
     <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
-      <article className="max-w-[925px] mx-auto pt-14 pb-24" style={{ backgroundColor: '#ffffff', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', marginTop: '10px', paddingLeft: '2px', paddingRight: '2px' }}>
+      <article className="max-w-[925px] mx-auto pt-14 pb-24" style={{ backgroundColor: '#ffffff', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', marginTop: '10px', paddingLeft: '42px', paddingRight: '42px' }}>
 
         {/* Kategori + Okuma Süresi */}
         <div className="flex items-center gap-2 mb-8 text-xs tracking-widest uppercase font-semibold" style={{ color: '#A30000' }}>
