@@ -48,7 +48,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="tr" className={`${plusJakarta.variable} ${inter.variable} ${dmSans.variable}`}>
-      <body className="text-gray-900 antialiased" style={{ backgroundColor: '#fbf9f8' }}>
+      <body className="text-gray-900 antialiased" style={{ backgroundColor: '#f5f5f5' }}>
         {children}
       </body>
     </html>
