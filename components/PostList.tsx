@@ -114,7 +114,7 @@ export default function PostList({
               textTransform: 'uppercase',
             }}
           >
-            {loading ? 'Yükleniyor…' : 'Daha Fazla Yaz →'}
+            {loading ? 'Yükleniyor…' : 'Daha Fazla Yazı →'}
           </button>
         </div>
       )}
