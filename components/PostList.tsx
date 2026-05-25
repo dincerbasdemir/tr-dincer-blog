@@ -88,7 +88,7 @@ export default function PostList({
 
             {/* Excerpt */}
             {post.excerpt && (
-              <p style={{ fontSize: '15px', lineHeight: '24px', color: '#6b7280', margin: 0 }}>
+              <p style={{ fontSize: '15px', lineHeight: '24px', color: '#111827', margin: 0 }}>
                 {post.excerpt}
               </p>
             )}
