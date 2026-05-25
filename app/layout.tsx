@@ -1,6 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Plus_Jakarta_Sans, Inter } from 'next/font/google'
+import { Plus_Jakarta_Sans, Inter, DM_Sans } from 'next/font/google'
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -12,6 +12,13 @@ const plusJakarta = Plus_Jakarta_Sans({
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
+  display: 'swap',
+  weight: ['400', '500', '600', '700'],
+})
+
+const dmSans = DM_Sans({
+  subsets: ['latin'],
+  variable: '--font-dm-sans',
   display: 'swap',
   weight: ['400', '500', '600', '700'],
 })
@@ -40,7 +47,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="tr" className={`${plusJakarta.variable} ${inter.variable}`}>
+    <html lang="tr" className={`${plusJakarta.variable} ${inter.variable} ${dmSans.variable}`}>
       <body className="text-gray-900 antialiased" style={{ backgroundColor: '#fbf9f8' }}>
         {children}
       </body>
