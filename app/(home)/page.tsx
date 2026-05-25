@@ -84,9 +84,7 @@ export default async function Home() {
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    style={{ color: '#9ca3af', transition: 'color 0.15s' }}
-                    onMouseOver={e => (e.currentTarget.style.color = '#374151')}
-                    onMouseOut={e => (e.currentTarget.style.color = '#9ca3af')}
+                    className="text-gray-400 hover:text-gray-700 transition-colors"
                   >
                     {social.svg}
                   </a>
