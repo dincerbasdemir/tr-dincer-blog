@@ -97,7 +97,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
 
   return (
     <div style={{ backgroundColor: '#fbf9f8', minHeight: '100vh' }}>
-      <article className="max-w-[740px] mx-auto px-5 pt-14 pb-24">
+      <article className="max-w-[740px] mx-auto pt-14 pb-24 px-10" style={{ backgroundColor: '#ffffff', boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}>
 
         {/* Kategori + Okuma Süresi */}
         <div className="flex items-center gap-2 mb-8 text-xs tracking-widest uppercase font-semibold" style={{ color: '#A30000' }}>
@@ -171,12 +171,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
 
         {/* Featured görsel — full-bleed */}
         {post.featured_image && (
-          <div style={{
-            marginLeft: 'calc(-50vw + 50%)',
-            marginRight: 'calc(-50vw + 50%)',
-            marginBottom: '56px',
-            lineHeight: 0,
-          }}>
+          <div style={{ marginBottom: '56px', lineHeight: 0 }}>
             <img
               src={post.featured_image}
               alt={post.title}
