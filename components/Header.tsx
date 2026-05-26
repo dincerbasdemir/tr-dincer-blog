@@ -10,7 +10,7 @@ const navLinks = [
 
 export default function Header() {
   return (
-    <header style={{ backgroundColor: '#f5f5f5', borderBottom: '1px solid rgba(0,0,0,0.03)' }}>
+    <header style={{ backgroundColor: '#f5f5f5', borderBottom: 'none' }}>
       <div className="max-w-[900px] mx-auto px-5 py-6 flex items-center justify-between">
         <Link href="/" className="font-bold tracking-tight hover:opacity-60 transition-opacity" style={{ color: '#111827', fontSize: '17px' }}>
           tr.dincer
