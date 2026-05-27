@@ -7,7 +7,7 @@ export default function Footer() {
         <div style={{ maxWidth: '260px' }}>
           <div className="font-bold text-sm mb-2" style={{ color: '#111827' }}>tr.dincer</div>
           <p style={{ fontSize: '13px', lineHeight: '20px', color: '#9ca3af' }}>
-            Ağacı sev, yeşili koru, ayıyı öp. Gürültüde yüzen küçük bir köşe.
+            <a href="https://www.instagram.com/p/CR_b_QtDOMX/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>Ağacı sev, yeşili koru, ayıyı öp.</a> Bu kişisel bir blogtur.
           </p>
         </div>
 
