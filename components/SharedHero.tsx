@@ -1,3 +1,4 @@
+import React from 'react'
 import { getSiteSettings } from '@/lib/supabase'
 import Link from 'next/link'
 import { tabs } from '@/lib/tabs'
@@ -15,7 +16,7 @@ export default async function SharedHero({
   description,
   activeTab = '/',
 }: {
-  title: string
+  title: React.ReactNode
   description?: string
   activeTab?: string
 }) {

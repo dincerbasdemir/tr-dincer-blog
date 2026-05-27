@@ -24,7 +24,17 @@ export default async function Home() {
       <div className="max-w-[925px] mx-auto" style={{ backgroundColor: '#ffffff', marginTop: '10px' }}>
 
         <SharedHero
-          title={siteTagline}
+          title={
+            <>
+              {siteTagline}
+              <a
+                href="https://www.instagram.com/p/CR_b_QtDOMX/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: 'inherit', textDecoration: 'none', opacity: 0.5 }}
+              >*</a>
+            </>
+          }
           description={siteDescription}
           activeTab="/"
         />
