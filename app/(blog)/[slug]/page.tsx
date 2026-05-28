@@ -98,127 +98,107 @@ export default async function PostPage({ params }: { params: { slug: string } })
 
   return (
     <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
-      <article className="max-w-[925px] mx-auto pt-10 sm:pt-14 pb-16 sm:pb-24 px-5 sm:px-16" style={{ backgroundColor: '#ffffff', marginTop: '10px' }}>
+      <article className="max-w-[925px] mx-auto" style={{ backgroundColor: '#ffffff', marginTop: '10px' }}>
 
-        {/* Kategori + Okuma Süresi */}
-        <div className="flex items-center gap-2 mb-8 text-xs tracking-widest uppercase font-semibold" style={{ color: '#A30000' }}>
-          {post.categories?.[0] && <span>{post.categories[0]}</span>}
-          {post.reading_time && (
-            <>
-              <span className="inline-block w-1 h-1 rounded-full" style={{ backgroundColor: '#c3c6d6' }} />
-              <span>{post.reading_time}</span>
-            </>
+        {/* ── İçerik bölümü (paddingli) ── */}
+        <div className="px-5 sm:px-16 pt-10 sm:pt-14">
+
+          {/* Kategori + Okuma Süresi */}
+          <div className="flex items-center gap-2 mb-8 text-xs tracking-widest uppercase font-semibold" style={{ color: '#A30000' }}>
+            {post.categories?.[0] && <span>{post.categories[0]}</span>}
+            {post.reading_time && (
+              <>
+                <span className="inline-block w-1 h-1 rounded-full" style={{ backgroundColor: '#c3c6d6' }} />
+                <span>{post.reading_time}</span>
+              </>
+            )}
+          </div>
+
+          {/* Başlık */}
+          <h1
+            className="mb-6 text-[32px] leading-[40px] sm:text-[45px] sm:leading-[54px]"
+            style={{ fontWeight: 800, letterSpacing: '-0.02em', color: '#1b1c1c' }}
+          >
+            {post.title}
+          </h1>
+
+          {/* Excerpt */}
+          {post.excerpt && (
+            <p className="mb-10" style={{ fontSize: '20px', lineHeight: '32px', color: '#5f5e5e' }}>
+              {post.excerpt}
+            </p>
+          )}
+
+          {/* Yazar + Tarih satırı */}
+          <div
+            className="flex items-center justify-between py-6 mb-14"
+            style={{
+              borderTop: '1px solid rgba(195,198,214,0.35)',
+              borderBottom: '1px solid rgba(195,198,214,0.35)',
+            }}
+          >
+            <div className="flex items-center gap-3">
+              {authorPhoto ? (
+                <img src={authorPhoto} alt={authorName} className="w-9 h-9 rounded-full object-cover" />
+              ) : (
+                <div className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold" style={{ backgroundColor: '#1b1c1c', fontSize: '13px' }}>
+                  {authorName.charAt(0).toUpperCase()}
+                </div>
+              )}
+              <div>
+                <div className="text-sm font-bold" style={{ color: '#1b1c1c' }}>{authorName}</div>
+                <div className="text-xs" style={{ color: '#5f5e5e' }}>
+                  {format(new Date(post.published_at), 'd MMMM yyyy', { locale: tr })}
+                </div>
+              </div>
+            </div>
+            <a href="/" className="text-xs font-semibold uppercase tracking-widest transition-colors hover:text-gray-900" style={{ color: '#5f5e5e' }}>
+              ← Tüm yazılar
+            </a>
+          </div>
+
+          {/* Featured görsel */}
+          {post.featured_image && (
+            <div style={{ marginBottom: '56px', lineHeight: 0 }}>
+              <img
+                src={post.featured_image}
+                alt={post.title}
+                style={{ display: 'block', width: '100%', height: 'auto', border: 'none', outline: 'none', borderRadius: 0, boxShadow: 'none', verticalAlign: 'bottom' }}
+              />
+            </div>
+          )}
+
+          {/* İçerik */}
+          <div className="prose article-body" dangerouslySetInnerHTML={{ __html: post.content }} />
+
+          {/* 3-nokta separator */}
+          <div className="flex justify-center items-center py-16 gap-3" style={{ color: '#c3c6d6' }}>
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-current" />
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-current" />
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-current" />
+          </div>
+
+          {/* Etiketler */}
+          {post.tags && post.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-10">
+              {post.tags.map((tag: string) => (
+                <span key={tag} className="px-3 py-1" style={{ fontSize: '11px', backgroundColor: '#efeded', color: '#5f5e5e', borderRadius: '2px', letterSpacing: '0.05em' }}>
+                  #{tag}
+                </span>
+              ))}
+            </div>
           )}
         </div>
 
-        {/* Başlık */}
-        <h1
-          className="mb-6 text-[32px] leading-[40px] sm:text-[45px] sm:leading-[54px]"
-          style={{
-            fontWeight: 800,
-            letterSpacing: '-0.02em',
-            color: '#1b1c1c',
-          }}
-        >
-          {post.title}
-        </h1>
-
-        {/* Excerpt — italic lead */}
-        {post.excerpt && (
-          <p
-            className="mb-10"
-            style={{ fontSize: '20px', lineHeight: '32px', color: '#5f5e5e' }}
-          >
-            {post.excerpt}
-          </p>
-        )}
-
-        {/* Yazar + Tarih satırı */}
-        <div
-          className="flex items-center justify-between py-6 mb-14"
-          style={{
-            borderTop: '1px solid rgba(195,198,214,0.35)',
-            borderBottom: '1px solid rgba(195,198,214,0.35)',
-          }}
-        >
-          <div className="flex items-center gap-3">
-            {authorPhoto ? (
-              <img src={authorPhoto} alt={authorName} className="w-9 h-9 rounded-full object-cover" />
-            ) : (
-              <div
-                className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold"
-                style={{ backgroundColor: '#1b1c1c', fontSize: '13px' }}
-              >
-                {authorName.charAt(0).toUpperCase()}
-              </div>
-            )}
-            <div>
-              <div className="text-sm font-bold" style={{ color: '#1b1c1c' }}>{authorName}</div>
-              <div className="text-xs" style={{ color: '#5f5e5e' }}>
-                {format(new Date(post.published_at), 'd MMMM yyyy', { locale: tr })}
-              </div>
-            </div>
-          </div>
-          <a
-            href="/"
-            className="text-xs font-semibold uppercase tracking-widest transition-colors hover:text-gray-900"
-            style={{ color: '#5f5e5e' }}
-          >
-            ← Tüm yazılar
-          </a>
-        </div>
-
-        {/* Featured görsel — full-bleed */}
-        {post.featured_image && (
-          <div style={{ marginBottom: '56px', lineHeight: 0 }}>
-            <img
-              src={post.featured_image}
-              alt={post.title}
-              style={{ display: 'block', width: '100%', height: 'auto', border: 'none', outline: 'none', borderRadius: 0, boxShadow: 'none', verticalAlign: 'bottom' }}
-            />
-          </div>
-        )}
-
-        {/* İçerik */}
-        <div className="prose article-body" dangerouslySetInnerHTML={{ __html: post.content }} />
-
-        {/* 3-nokta separator */}
-        <div className="flex justify-center items-center py-16 gap-3" style={{ color: '#c3c6d6' }}>
-          <span className="inline-block w-1.5 h-1.5 rounded-full bg-current" />
-          <span className="inline-block w-1.5 h-1.5 rounded-full bg-current" />
-          <span className="inline-block w-1.5 h-1.5 rounded-full bg-current" />
-        </div>
-
-        {/* Etiketler */}
-        {post.tags && post.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-10">
-            {post.tags.map((tag: string) => (
-              <span
-                key={tag}
-                className="px-3 py-1"
-                style={{
-                  fontSize: '11px',
-                  backgroundColor: '#efeded',
-                  color: '#5f5e5e',
-                  borderRadius: '2px',
-                  letterSpacing: '0.05em',
-                }}
-              >
-                #{tag}
-              </span>
-            ))}
-          </div>
-        )}
-
-        {/* Abonelik formu */}
+        {/* ── Abonelik formu (tam genişlik, siyah zemin) ── */}
         <SubscribeForm />
 
-        {/* Yazar kutusu */}
+        {/* ── Yazar kutusu (paddingli) ── */}
         {authorBio && (
+          <div className="px-5 sm:px-16 pb-16 sm:pb-24 pt-10">
           <div style={{
-            marginTop: '16px',
             padding: '36px',
-            backgroundColor: '#ffffff',
+            backgroundColor: '#f9fafb',
             borderRadius: '16px',
             border: '1px solid rgba(195,198,214,0.2)',
           }}>
@@ -328,6 +308,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
                 )}
               </div>
             </div>
+          </div>
           </div>
         )}
 

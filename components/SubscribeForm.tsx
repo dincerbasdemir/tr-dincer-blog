@@ -34,23 +34,19 @@ export default function SubscribeForm() {
   }
 
   return (
-    <div style={{
-      borderTop: '1px solid #f0f0f0',
-      paddingTop: '40px',
-      marginTop: '40px',
-    }}>
-      <p style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#adb5bd', marginBottom: '10px' }}>
+    <div style={{ backgroundColor: '#111827', padding: '48px 64px' }} className="px-5 py-10 sm:px-16 sm:py-14">
+      <p style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#6b7280', marginBottom: '10px' }}>
         Bülten
       </p>
-      <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#111827', letterSpacing: '-0.01em', marginBottom: '8px' }}>
+      <h3 style={{ fontSize: '22px', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.01em', marginBottom: '8px' }}>
         Yeni yazılardan haberdar ol
       </h3>
-      <p style={{ fontSize: '14px', color: '#6b7280', marginBottom: '20px' }}>
+      <p style={{ fontSize: '14px', color: '#9ca3af', marginBottom: '24px' }}>
         Yeni bir yazı yayınlandığında mail olarak göndereyim.
       </p>
 
       {status === 'success' ? (
-        <p style={{ fontSize: '15px', color: '#111827', fontWeight: 600 }}>✓ {message}</p>
+        <p style={{ fontSize: '15px', color: '#86efac', fontWeight: 600 }}>✓ {message}</p>
       ) : (
         <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           <input
@@ -62,23 +58,23 @@ export default function SubscribeForm() {
             style={{
               flex: 1,
               minWidth: '200px',
-              padding: '10px 14px',
+              padding: '11px 16px',
               fontSize: '14px',
-              border: '1px solid #e5e7eb',
+              border: '1px solid #374151',
               outline: 'none',
-              color: '#111827',
-              backgroundColor: '#ffffff',
+              color: '#ffffff',
+              backgroundColor: '#1f2937',
             }}
           />
           <button
             type="submit"
             disabled={status === 'loading'}
             style={{
-              padding: '10px 20px',
-              backgroundColor: '#111827',
-              color: '#ffffff',
+              padding: '11px 24px',
+              backgroundColor: '#ffffff',
+              color: '#111827',
               fontSize: '14px',
-              fontWeight: 600,
+              fontWeight: 700,
               border: 'none',
               cursor: status === 'loading' ? 'not-allowed' : 'pointer',
               opacity: status === 'loading' ? 0.7 : 1,
@@ -88,7 +84,7 @@ export default function SubscribeForm() {
             {status === 'loading' ? 'Kaydediliyor…' : 'Abone Ol'}
           </button>
           {status === 'error' && (
-            <p style={{ width: '100%', fontSize: '13px', color: '#d00202', margin: '4px 0 0' }}>{message}</p>
+            <p style={{ width: '100%', fontSize: '13px', color: '#fca5a5', margin: '4px 0 0' }}>{message}</p>
           )}
         </form>
       )}

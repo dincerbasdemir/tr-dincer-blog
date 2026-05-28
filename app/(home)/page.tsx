@@ -42,8 +42,9 @@ export default async function Home() {
 
         <div className="px-5 pb-16 sm:px-16 sm:pb-20">
           <PostList initialPosts={posts} initialOffset={10} />
-          <SubscribeForm />
         </div>
+
+        <SubscribeForm />
 
       </div>
     </div>
