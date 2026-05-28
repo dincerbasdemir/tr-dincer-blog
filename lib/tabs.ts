@@ -5,4 +5,5 @@ export const tabs = [
   { label: 'Tasarım', href: '/kategori/tasarim' },
   { label: 'Teknoloji', href: '/kategori/teknoloji' },
   { label: 'Yapay Zeka', href: '/kategori/yapay-zeka' },
+  { label: 'Mikro', href: '/mikro' },
 ]
