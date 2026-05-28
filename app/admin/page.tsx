@@ -11,7 +11,7 @@ export default async function AdminDashboard() {
 
   const { data: posts, error } = await supabase
     .from('posts')
-    .select('id, title, slug, published_at, categories')
+    .select('id, title, slug, published_at, categories, views')
     .order('published_at', { ascending: false })
 
   const allPosts = posts || []
@@ -62,7 +62,7 @@ export default async function AdminDashboard() {
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
-                  {['Başlık', 'Kategori', 'Tarih', ''].map(h => (
+                  {['Başlık', 'Kategori', 'Görüntülenme', 'Tarih', ''].map(h => (
                     <th key={h} style={{
                       padding: '12px 20px', textAlign: 'left',
                       fontSize: '11px', fontWeight: 700, color: '#9ca3af',
@@ -90,6 +90,11 @@ export default async function AdminDashboard() {
                           {post.categories[0]}
                         </span>
                       ) : <span style={{ color: '#d1d5db', fontSize: '13px' }}>—</span>}
+                    </td>
+                    <td style={{ padding: '14px 20px', whiteSpace: 'nowrap' }}>
+                      <span style={{ fontSize: '13px', color: '#374151', fontWeight: 500 }}>
+                        {post.views ?? 0}
+                      </span>
                     </td>
                     <td style={{ padding: '14px 20px', fontSize: '13px', color: '#6b7280', whiteSpace: 'nowrap' }}>
                       {post.published_at ? format(new Date(post.published_at), 'd MMM yyyy', { locale: tr }) : '—'}

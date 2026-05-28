@@ -4,6 +4,7 @@ import { format } from 'date-fns'
 import { tr } from 'date-fns/locale'
 import type { Metadata } from 'next'
 import SubscribeForm from '@/components/SubscribeForm'
+import ViewTracker from '@/components/ViewTracker'
 
 async function getPost(slug: string) {
   const { data, error } = await supabase
@@ -98,6 +99,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
 
   return (
     <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
+      <ViewTracker slug={post.slug} />
       <article className="max-w-[925px] mx-auto" style={{ backgroundColor: '#ffffff', marginTop: '10px' }}>
 
         {/* ── İçerik bölümü (paddingli) ── */}

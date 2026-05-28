@@ -22,6 +22,11 @@ const navGroups = [
   },
   {
     items: [
+      { href: '/admin/subscribers', label: 'Aboneler' },
+    ],
+  },
+  {
+    items: [
       { href: '/admin/settings', label: 'Ayarlar' },
     ],
   },
