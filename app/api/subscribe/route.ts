@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
 
     const { error } = await supabase
       .from('subscribers')
-      .upsert({ email, active: true }, { onConflict: 'email' })
+      .upsert({ email, active: true, subscribed_at: new Date().toISOString() }, { onConflict: 'email' })
 
     if (error) throw error
 

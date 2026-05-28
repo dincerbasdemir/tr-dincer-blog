@@ -10,8 +10,8 @@ export default async function SubscribersPage() {
 
   const { data: subscribers, error } = await supabase
     .from('subscribers')
-    .select('id, email, active, created_at')
-    .order('created_at', { ascending: false })
+    .select('id, email, active, subscribed_at')
+    .order('subscribed_at', { ascending: false })
 
   const allSubs = subscribers || []
   const activeSubs = allSubs.filter(s => s.active)
@@ -126,8 +126,8 @@ export default async function SubscribersPage() {
                       )}
                     </td>
                     <td style={{ padding: '14px 20px', fontSize: '13px', color: '#6b7280', whiteSpace: 'nowrap' }}>
-                      {sub.created_at
-                        ? format(new Date(sub.created_at), 'd MMM yyyy, HH:mm', { locale: tr })
+                      {sub.subscribed_at
+                        ? format(new Date(sub.subscribed_at), 'd MMM yyyy, HH:mm', { locale: tr })
                         : '—'}
                     </td>
                   </tr>
