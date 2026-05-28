@@ -31,7 +31,7 @@ export default async function SharedHero({
     .map(([key, icon]) => ({ key, url: settings[key], icon }))
 
   return (
-    <div style={{ padding: '48px 64px 0' }}>
+    <div className="px-5 pt-10 sm:px-16 sm:pt-12" style={{ paddingBottom: 0 }}>
 
       {/* Yazar + Sosyal ikonlar */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '44px' }}>
@@ -67,7 +67,7 @@ export default async function SharedHero({
       </div>
 
       {/* Başlık */}
-      <h1 style={{ fontSize: '52px', lineHeight: '62px', fontWeight: 800, letterSpacing: '-0.03em', color: '#111827', marginBottom: '20px', maxWidth: '640px' }}>
+      <h1 className="text-[34px] leading-[42px] sm:text-[52px] sm:leading-[62px]" style={{ fontWeight: 800, letterSpacing: '-0.03em', color: '#111827', marginBottom: '20px', maxWidth: '640px' }}>
         {title}
       </h1>
 
@@ -79,7 +79,7 @@ export default async function SharedHero({
       )}
 
       {/* Sekme navigasyonu */}
-      <div style={{ display: 'flex', borderBottom: '1px solid #e5e7eb' }}>
+      <div style={{ display: 'flex', borderBottom: '1px solid #e5e7eb', overflowX: 'auto', WebkitOverflowScrolling: 'touch' as any, scrollbarWidth: 'none' as any }}>
         {tabs.map(tab => {
           const isActive = tab.href === activeTab
           return (

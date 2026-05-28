@@ -97,7 +97,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
 
   return (
     <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
-      <article className="max-w-[925px] mx-auto pt-14 pb-24" style={{ backgroundColor: '#ffffff', marginTop: '10px', paddingLeft: '64px', paddingRight: '64px' }}>
+      <article className="max-w-[925px] mx-auto pt-10 sm:pt-14 pb-16 sm:pb-24 px-5 sm:px-16" style={{ backgroundColor: '#ffffff', marginTop: '10px' }}>
 
         {/* Kategori + Okuma Süresi */}
         <div className="flex items-center gap-2 mb-8 text-xs tracking-widest uppercase font-semibold" style={{ color: '#A30000' }}>
@@ -112,10 +112,8 @@ export default async function PostPage({ params }: { params: { slug: string } })
 
         {/* Başlık */}
         <h1
-          className="mb-6"
+          className="mb-6 text-[32px] leading-[40px] sm:text-[45px] sm:leading-[54px]"
           style={{
-            fontSize: '45px',
-            lineHeight: '54px',
             fontWeight: 800,
             letterSpacing: '-0.02em',
             color: '#1b1c1c',

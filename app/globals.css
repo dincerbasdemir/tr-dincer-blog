@@ -27,9 +27,16 @@
 .prose {
   max-width: none;
   font-family: var(--font-dm-sans), system-ui, sans-serif;
-  font-size: 20px;
-  line-height: 34px;
+  font-size: 17px;
+  line-height: 30px;
   color: #000000;
+}
+
+@media (min-width: 640px) {
+  .prose {
+    font-size: 20px;
+    line-height: 34px;
+  }
 }
 
 /* Paragraflar arası nefes */

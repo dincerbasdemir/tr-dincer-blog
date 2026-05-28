@@ -72,7 +72,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
         />
 
         {/* Yazı listesi */}
-        <div style={{ padding: '0 64px 80px' }}>
+        <div className="px-5 pb-16 sm:px-16 sm:pb-20">
           {posts.length === 0 ? (
             <p style={{ color: '#9ca3af', padding: '48px 0', fontSize: '15px' }}>
               Bu kategoride henüz yazı bulunmuyor.

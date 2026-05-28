@@ -39,7 +39,7 @@ export default async function Home() {
           activeTab="/"
         />
 
-        <div style={{ padding: '0 64px 80px' }}>
+        <div className="px-5 pb-16 sm:px-16 sm:pb-20">
           <PostList initialPosts={posts} initialOffset={10} />
         </div>
 
