@@ -1,6 +1,7 @@
 import { supabase, getSiteSettings } from '@/lib/supabase'
 import PostList from '@/components/PostList'
 import SharedHero from '@/components/SharedHero'
+import SubscribeForm from '@/components/SubscribeForm'
 
 async function getPosts() {
   const { data, error } = await supabase
@@ -41,6 +42,7 @@ export default async function Home() {
 
         <div className="px-5 pb-16 sm:px-16 sm:pb-20">
           <PostList initialPosts={posts} initialOffset={10} />
+          <SubscribeForm />
         </div>
 
       </div>

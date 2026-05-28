@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { format } from 'date-fns'
 import { tr } from 'date-fns/locale'
 import type { Metadata } from 'next'
+import SubscribeForm from '@/components/SubscribeForm'
 
 async function getPost(slug: string) {
   const { data, error } = await supabase
@@ -208,6 +209,9 @@ export default async function PostPage({ params }: { params: { slug: string } })
             ))}
           </div>
         )}
+
+        {/* Abonelik formu */}
+        <SubscribeForm />
 
         {/* Yazar kutusu */}
         {authorBio && (

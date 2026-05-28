@@ -53,6 +53,7 @@ export default function PostEditor({
 
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [notifying, setNotifying] = useState(false)
   const [error, setError] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
   const [uploadingFeatured, setUploadingFeatured] = useState(false)
@@ -138,6 +139,33 @@ export default function PostEditor({
       }
     }
     setSaving(false)
+  }
+
+  async function handleNotify() {
+    if (!isEditing) return
+    if (!confirm(`"${title}" yazısı için tüm abonelere bildirim maili gönderilecek. Emin misiniz?`)) return
+    setNotifying(true)
+    setError('')
+    try {
+      const res = await fetch('/api/notify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-notify-secret': 'dincer-blog-notify-2026',
+        },
+        body: JSON.stringify({ postTitle: title, postSlug: slug, postExcerpt: excerpt }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setError(data.error || 'Bildirim gönderilemedi.')
+      } else {
+        setSuccessMsg(`✉ ${data.sent} kişiye gönderildi!`)
+        setTimeout(() => setSuccessMsg(''), 3000)
+      }
+    } catch {
+      setError('Bağlantı hatası.')
+    }
+    setNotifying(false)
   }
 
   async function handleDelete() {
@@ -229,6 +257,20 @@ export default function PostEditor({
             >
               ↗ Gör
             </a>
+          )}
+          {isEditing && (
+            <button
+              onClick={handleNotify}
+              disabled={notifying}
+              style={{
+                fontSize: '13px', color: '#0369a1', backgroundColor: 'transparent',
+                border: '1px solid #bae6fd', borderRadius: '7px',
+                padding: '8px 14px', cursor: notifying ? 'not-allowed' : 'pointer',
+                opacity: notifying ? 0.7 : 1,
+              }}
+            >
+              {notifying ? 'Gönderiliyor…' : '✉ Bildirim Gönder'}
+            </button>
           )}
           {isEditing && (
             <button
