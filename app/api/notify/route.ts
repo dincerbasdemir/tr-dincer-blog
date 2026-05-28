@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
     const results = await Promise.allSettled(
       subscribers.map((sub) =>
         resend.emails.send({
-          from: 'tr.dincer <bildirim@tr.dincer.co>',
+          from: 'tr.dincer <bildirim@dincer.co>',
           to: sub.email,
           subject: `Yeni yazı: ${postTitle}`,
           html: `
