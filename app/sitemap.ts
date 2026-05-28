@@ -16,6 +16,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .from('pages')
     .select('slug, updated_at')
 
+  // En son mikro yazının tarihini al
+  const { data: lastMicro } = await supabase
+    .from('micro_posts')
+    .select('created_at')
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single()
+
   // Statik sayfalar
   const staticPages: MetadataRoute.Sitemap = [
     {
@@ -23,6 +31,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 1,
+    },
+    {
+      url: `${baseUrl}/mikro`,
+      lastModified: lastMicro?.created_at ? new Date(lastMicro.created_at) : new Date(),
+      changeFrequency: 'daily',
+      priority: 0.7,
     },
   ]
 
