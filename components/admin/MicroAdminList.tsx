@@ -65,13 +65,10 @@ export default function MicroAdminList({ posts: initial }: { posts: Post[] }) {
             </span>
           )}
 
-          <p style={{
-            fontSize: '14px', lineHeight: '22px',
-            color: '#1b1c1c', margin: '0 0 12px',
-            whiteSpace: 'pre-wrap', wordBreak: 'break-word',
-          }}>
-            {post.content}
-          </p>
+          <div
+            style={{ fontSize: '14px', lineHeight: '22px', color: '#1b1c1c', margin: '0 0 12px', wordBreak: 'break-word' }}
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          />
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <span style={{ fontSize: '12px', color: '#9ca3af' }}>

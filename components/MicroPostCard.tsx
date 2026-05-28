@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-const COLLAPSE_THRESHOLD = 300
+const COLLAPSE_THRESHOLD = 400 // karakter (HTML tag'leri hariç)
 
 function relativeTime(dateStr: string): string {
   const diff = Date.now() - new Date(dateStr).getTime()
@@ -25,11 +25,9 @@ export default function MicroPostCard({
 }: {
   post: { id: string; content: string; created_at: string; pinned: boolean }
 }) {
-  const isLong = post.content.length > COLLAPSE_THRESHOLD
+  const plainText = post.content.replace(/<[^>]*>/g, '')
+  const isLong = plainText.length > COLLAPSE_THRESHOLD
   const [expanded, setExpanded] = useState(false)
-
-  const displayText =
-    isLong && !expanded ? post.content.slice(0, COLLAPSE_THRESHOLD) + '…' : post.content
 
   return (
     <div
@@ -58,16 +56,20 @@ export default function MicroPostCard({
       )}
 
       {/* Content */}
-      <p style={{
-        fontSize: '16px',
-        lineHeight: '27px',
-        color: '#1b1c1c',
-        margin: 0,
-        whiteSpace: 'pre-wrap',
-        wordBreak: 'break-word',
-      }}>
-        {displayText}
-      </p>
+      <div
+        className="micro-content"
+        style={{
+          fontSize: '16px',
+          lineHeight: '27px',
+          color: '#1b1c1c',
+          wordBreak: 'break-word',
+          overflow: isLong && !expanded ? 'hidden' : 'visible',
+          display: isLong && !expanded ? '-webkit-box' : 'block',
+          WebkitLineClamp: isLong && !expanded ? 6 : undefined,
+          WebkitBoxOrient: isLong && !expanded ? 'vertical' : undefined,
+        } as React.CSSProperties}
+        dangerouslySetInnerHTML={{ __html: post.content }}
+      />
 
       {/* Expand toggle */}
       {isLong && (

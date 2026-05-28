@@ -2,8 +2,9 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import dynamic from 'next/dynamic'
 
-const MAX_CHARS = 500
+const MicroEditor = dynamic(() => import('./MicroEditor'), { ssr: false })
 
 export default function MicroComposer() {
   const [content, setContent] = useState('')
@@ -11,7 +12,10 @@ export default function MicroComposer() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const router = useRouter()
 
-  const remaining = MAX_CHARS - content.length
+  // HTML tag'lerini çıkar karakter sayımı için
+  const plainText = content.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ')
+  const MAX_CHARS = 500
+  const remaining = MAX_CHARS - plainText.length
   const isOverLimit = remaining < 0
 
   async function handleSubmit(e: React.FormEvent) {
@@ -52,24 +56,7 @@ export default function MicroComposer() {
       boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
     }}>
       <form onSubmit={handleSubmit}>
-        <textarea
-          value={content}
-          onChange={e => setContent(e.target.value)}
-          placeholder="Ne düşünüyorsun?"
-          rows={4}
-          style={{
-            width: '100%',
-            border: 'none',
-            outline: 'none',
-            resize: 'none',
-            fontSize: '16px',
-            lineHeight: '26px',
-            color: '#1b1c1c',
-            fontFamily: 'inherit',
-            backgroundColor: 'transparent',
-            boxSizing: 'border-box',
-          }}
-        />
+        <MicroEditor content={content} onChange={setContent} />
 
         <div style={{
           display: 'flex',
