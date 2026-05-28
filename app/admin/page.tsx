@@ -6,18 +6,28 @@ import { tr } from 'date-fns/locale'
 
 export const dynamic = 'force-dynamic'
 
-export default async function AdminDashboard() {
+const PER_PAGE = 20
+
+export default async function AdminDashboard({
+  searchParams,
+}: {
+  searchParams: { page?: string }
+}) {
   const supabase = createAdminClient()
+  const page = Math.max(1, parseInt(searchParams.page || '1', 10))
+  const from = (page - 1) * PER_PAGE
+  const to = from + PER_PAGE - 1
 
   const [
-    { data: posts, error },
+    { data: posts, error, count: totalCount },
     { count: activeSubscribers },
     { data: viewData },
   ] = await Promise.all([
     supabase
       .from('posts')
-      .select('id, title, slug, published_at, categories, views, status')
-      .order('published_at', { ascending: false }),
+      .select('id, title, slug, published_at, categories, views, status', { count: 'exact' })
+      .order('published_at', { ascending: false })
+      .range(from, to),
     supabase
       .from('subscribers')
       .select('id', { count: 'exact', head: true })
@@ -30,6 +40,7 @@ export default async function AdminDashboard() {
 
   const allPosts = posts || []
   const publishedPosts = allPosts.filter(p => p.status === 'published')
+  const totalPages = Math.ceil((totalCount ?? 0) / PER_PAGE)
   const totalViews = (viewData || []).reduce((sum, p) => sum + (p.views || 0), 0)
 
   const stats = [
@@ -203,6 +214,94 @@ export default async function AdminDashboard() {
             </table>
           )}
         </div>
+
+        {/* ── Pagination ── */}
+        {totalPages > 1 && (
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '16px' }}>
+            <span style={{ fontSize: '13px', color: '#9ca3af' }}>
+              {from + 1}–{Math.min(to + 1, totalCount ?? 0)} / {totalCount} yazı
+            </span>
+            <div style={{ display: 'flex', gap: '6px' }}>
+              {page > 1 ? (
+                <Link
+                  href={`/admin?page=${page - 1}`}
+                  style={{
+                    padding: '7px 14px', fontSize: '13px', fontWeight: 600,
+                    border: '1px solid #e5e7eb', borderRadius: '8px',
+                    textDecoration: 'none', color: '#374151', backgroundColor: '#fff',
+                  }}
+                >
+                  ← Önceki
+                </Link>
+              ) : (
+                <span style={{
+                  padding: '7px 14px', fontSize: '13px', fontWeight: 600,
+                  border: '1px solid #f3f4f6', borderRadius: '8px',
+                  color: '#d1d5db', backgroundColor: '#f9fafb',
+                  cursor: 'not-allowed',
+                }}>
+                  ← Önceki
+                </span>
+              )}
+
+              {/* Sayfa numaraları */}
+              <div style={{ display: 'flex', gap: '4px' }}>
+                {Array.from({ length: totalPages }, (_, i) => i + 1)
+                  .filter(p => p === 1 || p === totalPages || Math.abs(p - page) <= 1)
+                  .reduce<(number | '...')[]>((acc, p, idx, arr) => {
+                    if (idx > 0 && typeof arr[idx - 1] === 'number' && (p as number) - (arr[idx - 1] as number) > 1) {
+                      acc.push('...')
+                    }
+                    acc.push(p)
+                    return acc
+                  }, [])
+                  .map((p, idx) =>
+                    p === '...' ? (
+                      <span key={`ellipsis-${idx}`} style={{ padding: '7px 6px', fontSize: '13px', color: '#9ca3af' }}>…</span>
+                    ) : (
+                      <Link
+                        key={p}
+                        href={`/admin?page=${p}`}
+                        style={{
+                          padding: '7px 12px', fontSize: '13px', fontWeight: 600,
+                          border: '1px solid ' + (p === page ? '#111827' : '#e5e7eb'),
+                          borderRadius: '8px', textDecoration: 'none',
+                          color: p === page ? '#ffffff' : '#374151',
+                          backgroundColor: p === page ? '#111827' : '#fff',
+                          minWidth: '36px', textAlign: 'center',
+                        }}
+                      >
+                        {p}
+                      </Link>
+                    )
+                  )}
+              </div>
+
+              {page < totalPages ? (
+                <Link
+                  href={`/admin?page=${page + 1}`}
+                  style={{
+                    padding: '7px 14px', fontSize: '13px', fontWeight: 600,
+                    border: '1px solid #e5e7eb', borderRadius: '8px',
+                    textDecoration: 'none', color: '#374151', backgroundColor: '#fff',
+                  }}
+                >
+                  Sonraki →
+                </Link>
+              ) : (
+                <span style={{
+                  padding: '7px 14px', fontSize: '13px', fontWeight: 600,
+                  border: '1px solid #f3f4f6', borderRadius: '8px',
+                  color: '#d1d5db', backgroundColor: '#f9fafb',
+                  cursor: 'not-allowed',
+                }}>
+                  Sonraki →
+                </span>
+              )}
+            </div>
+          </div>
+        )}
+
       </div>
     </AdminShell>
   )
