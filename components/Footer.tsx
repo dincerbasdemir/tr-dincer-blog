@@ -33,7 +33,7 @@ export default function Footer() {
                 { name: 'Ben', href: '/ben' },
                 { name: 'Arama', href: '/arama' },
                 { name: 'RSS', href: '/rss.xml' },
-                { name: 'Mikro Blog', href: 'https://th.dincer.co' },
+                { name: 'Mikro Blog', href: '/mikro' },
               ].map((l) => (
                 <a key={l.href} href={l.href} className="text-sm hover:text-gray-900 transition-colors" style={{ color: '#6b7280' }}>{l.name}</a>
               ))}
