@@ -153,7 +153,7 @@ export default function PostEditor({
           'Content-Type': 'application/json',
           'x-notify-secret': 'dincer-blog-notify-2026',
         },
-        body: JSON.stringify({ postTitle: title, postSlug: slug, postExcerpt: excerpt }),
+        body: JSON.stringify({ postTitle: title, postSlug: slug, postExcerpt: excerpt, postFeaturedImage: featuredImage || null }),
       })
       const data = await res.json()
       if (!res.ok) {
