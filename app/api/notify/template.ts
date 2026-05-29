@@ -5,8 +5,13 @@ export function buildEmail(params: {
   postUrl: string
   unsubscribeToken: string
 }) {
-  const { postTitle, postExcerpt, postFeaturedImage, postUrl, unsubscribeToken } = params
+  const { postTitle, postFeaturedImage, postUrl, unsubscribeToken } = params
   const unsubscribeUrl = `https://tr.dincer.co/api/unsubscribe?token=${unsubscribeToken}`
+  const excerpt = params.postExcerpt
+    ? params.postExcerpt.length > 160
+      ? params.postExcerpt.slice(0, 160).trimEnd() + '…'
+      : params.postExcerpt
+    : undefined
 
   return `<!DOCTYPE html>
 <html lang="tr">
@@ -58,8 +63,8 @@ export function buildEmail(params: {
             </h1>
 
             <!-- Excerpt -->
-            ${postExcerpt
-              ? `<p style="font-family:'DM Sans',system-ui,sans-serif;font-size:16px;line-height:28px;color:#6b7280;margin:0 0 32px;padding:0">${postExcerpt}</p>`
+            ${excerpt
+              ? `<p style="font-family:'DM Sans',system-ui,sans-serif;font-size:16px;line-height:28px;color:#6b7280;margin:0 0 32px;padding:0">${excerpt}</p>`
               : '<div style="height:24px"></div>'
             }
 
