@@ -1,6 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Plus_Jakarta_Sans, Inter, DM_Sans } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/next'
 import CookieBanner from '@/components/CookieBanner'
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -52,6 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="text-gray-900 antialiased" style={{ backgroundColor: '#f5f5f5' }}>
         {children}
         <CookieBanner />
+        <Analytics />
       </body>
     </html>
   )
