@@ -8,36 +8,17 @@ const supabase = createClient(
 )
 const resend = new Resend(process.env.RESEND_API_KEY)
 
-export async function POST(req: NextRequest) {
-  try {
-    // Basit auth kontrolü
-    const authHeader = req.headers.get('x-notify-secret')
-    if (authHeader !== process.env.NOTIFY_SECRET) {
-      return NextResponse.json({ error: 'Yetkisiz.' }, { status: 401 })
-    }
+function buildEmail(params: {
+  postTitle: string
+  postExcerpt?: string
+  postFeaturedImage?: string
+  postUrl: string
+  unsubscribeToken: string
+}) {
+  const { postTitle, postExcerpt, postFeaturedImage, postUrl, unsubscribeToken } = params
+  const unsubscribeUrl = `https://tr.dincer.co/api/unsubscribe?token=${unsubscribeToken}`
 
-    const { postTitle, postSlug, postExcerpt, postFeaturedImage } = await req.json()
-
-    if (!postTitle || !postSlug) {
-      return NextResponse.json({ error: 'Yazı bilgileri eksik.' }, { status: 400 })
-    }
-
-    // Aktif aboneleri çek
-    const { data: subscribers, error } = await supabase
-      .from('subscribers')
-      .select('email, token')
-      .eq('active', true)
-
-    if (error) throw error
-    if (!subscribers || subscribers.length === 0) {
-      return NextResponse.json({ success: true, sent: 0, message: 'Abone yok.' })
-    }
-
-    const postUrl = `https://tr.dincer.co/${postSlug}`
-
-    function buildEmail(unsubscribeToken: string) {
-      const unsubscribeUrl = `https://tr.dincer.co/api/unsubscribe?token=${unsubscribeToken}`
-      return `<!DOCTYPE html>
+  return `<!DOCTYPE html>
 <html lang="tr">
 <head>
   <meta charset="utf-8">
@@ -58,7 +39,7 @@ export async function POST(req: NextRequest) {
             <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
               <tr>
                 <td>
-                  <span style="font-family:'DM Sans',system-ui,sans-serif;font-size:17px;font-weight:800;color:#ffffff;letter-spacing:-0.02em;text-decoration:none">tr.dincer</span>
+                  <span style="font-family:'DM Sans',system-ui,sans-serif;font-size:17px;font-weight:800;color:#ffffff;letter-spacing:-0.02em">tr.dincer</span>
                 </td>
                 <td align="right">
                   <span style="font-family:'DM Sans',system-ui,sans-serif;font-size:11px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.08em">Bülten</span>
@@ -76,7 +57,7 @@ export async function POST(req: NextRequest) {
             <table cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom:24px">
               <tr>
                 <td style="background-color:#fef2f2;border-radius:999px;padding:5px 14px">
-                  <span style="font-family:'DM Sans',system-ui,sans-serif;font-size:11px;font-weight:700;color:#d00202;text-transform:uppercase;letter-spacing:0.07em">✦ &nbsp;Yeni Yazı</span>
+                  <span style="font-family:'DM Sans',system-ui,sans-serif;font-size:11px;font-weight:700;color:#d00202;text-transform:uppercase;letter-spacing:0.07em">&#10022; &nbsp;Yeni Yaz&#305;</span>
                 </td>
               </tr>
             </table>
@@ -87,14 +68,17 @@ export async function POST(req: NextRequest) {
             </h1>
 
             <!-- Excerpt -->
-            ${postExcerpt ? `<p style="font-family:'DM Sans',system-ui,sans-serif;font-size:16px;line-height:28px;color:#6b7280;margin:0 0 32px;padding:0">${postExcerpt}</p>` : '<div style="height:24px"></div>'}
+            ${postExcerpt
+              ? `<p style="font-family:'DM Sans',system-ui,sans-serif;font-size:16px;line-height:28px;color:#6b7280;margin:0 0 32px;padding:0">${postExcerpt}</p>`
+              : '<div style="height:24px"></div>'
+            }
 
             <!-- CTA Button -->
             <table cellpadding="0" cellspacing="0" role="presentation">
               <tr>
                 <td style="background-color:#111827;border-radius:8px">
                   <a href="${postUrl}" style="font-family:'DM Sans',system-ui,sans-serif;display:inline-block;padding:13px 28px;font-size:14px;font-weight:700;color:#ffffff;text-decoration:none;letter-spacing:0.01em">
-                    Yazıyı Oku &nbsp;→
+                    Yaz&#305;y&#305; Oku &rarr;
                   </a>
                 </td>
               </tr>
@@ -106,7 +90,7 @@ export async function POST(req: NextRequest) {
         <!-- FEATURED IMAGE -->
         <tr>
           <td style="background-color:#ffffff;padding:0 40px 40px">
-            <img src="${postFeaturedImage}" alt="${postTitle}" width="520" style="width:100%;max-width:520px;height:auto;display:block;border-radius:8px;border:none">
+            <img src="${postFeaturedImage}" alt="" width="520" style="width:100%;max-width:520px;height:auto;display:block;border-radius:8px;border:none">
           </td>
         </tr>
         ` : ''}
@@ -121,20 +105,14 @@ export async function POST(req: NextRequest) {
         <!-- FOOTER -->
         <tr>
           <td style="background-color:#ffffff;padding:24px 40px 32px;border-radius:0 0 12px 12px">
-            <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
-              <tr>
-                <td>
-                  <p style="font-family:'DM Sans',system-ui,sans-serif;font-size:12px;color:#9ca3af;margin:0 0 6px;padding:0">
-                    Bu kişisel bir blogtur.
-                    <a href="https://tr.dincer.co" style="color:#9ca3af;text-decoration:none">tr.dincer.co</a>
-                  </p>
-                  <p style="font-family:'DM Sans',system-ui,sans-serif;font-size:12px;color:#9ca3af;margin:0;padding:0">
-                    Bu maili almak istemiyorsanız
-                    <a href="${unsubscribeUrl}" style="color:#d00202;text-decoration:none">aboneliğinizi iptal edebilirsiniz</a>.
-                  </p>
-                </td>
-              </tr>
-            </table>
+            <p style="font-family:'DM Sans',system-ui,sans-serif;font-size:12px;color:#9ca3af;margin:0 0 6px;padding:0">
+              Bu ki&#351;isel bir blogtur.
+              <a href="https://tr.dincer.co" style="color:#9ca3af;text-decoration:none">tr.dincer.co</a>
+            </p>
+            <p style="font-family:'DM Sans',system-ui,sans-serif;font-size:12px;color:#9ca3af;margin:0;padding:0">
+              Bu maili almak istemiyorsan&#305;z
+              <a href="${unsubscribeUrl}" style="color:#d00202;text-decoration:none">aboneli&#287;inizi iptal edebilirsiniz</a>.
+            </p>
           </td>
         </tr>
 
@@ -144,16 +122,46 @@ export async function POST(req: NextRequest) {
 </table>
 </body>
 </html>`
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    const authHeader = req.headers.get('x-notify-secret')
+    if (authHeader !== process.env.NOTIFY_SECRET) {
+      return NextResponse.json({ error: 'Yetkisiz.' }, { status: 401 })
     }
 
-    // Her aboneye mail gönder (batch olarak)
+    const { postTitle, postSlug, postExcerpt, postFeaturedImage } = await req.json()
+
+    if (!postTitle || !postSlug) {
+      return NextResponse.json({ error: 'Yazı bilgileri eksik.' }, { status: 400 })
+    }
+
+    const { data: subscribers, error } = await supabase
+      .from('subscribers')
+      .select('email, token')
+      .eq('active', true)
+
+    if (error) throw error
+    if (!subscribers || subscribers.length === 0) {
+      return NextResponse.json({ success: true, sent: 0, message: 'Abone yok.' })
+    }
+
+    const postUrl = `https://tr.dincer.co/${postSlug}`
+
     const results = await Promise.allSettled(
       subscribers.map((sub) =>
         resend.emails.send({
           from: 'tr.dincer <bildirim@dincer.co>',
           to: sub.email,
-          subject: `${postTitle}`,
-          html: buildEmail(sub.token),
+          subject: postTitle,
+          html: buildEmail({
+            postTitle,
+            postExcerpt,
+            postFeaturedImage,
+            postUrl,
+            unsubscribeToken: sub.token,
+          }),
         })
       )
     )
