@@ -67,8 +67,10 @@ export default function SubscribeForm() {
             color: '#9ca3af',
             margin: '0 0 36px',
           }}>
-            Yeni bir yazı yayınlandığında<br />
-            mail olarak göndereyim.
+            Yeni bir yazı yayınlandığında mail olarak göndereyim.{' '}
+            <a href="/gizlilik-politikasi" style={{ color: '#9ca3af', textDecoration: 'underline' }}>
+              Gizlilik Politikası
+            </a>
           </p>
 
           {status === 'success' ? (
