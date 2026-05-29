@@ -1,21 +1,33 @@
 import { supabase, getSiteSettings } from '@/lib/supabase'
 import SharedHero from '@/components/SharedHero'
-import MicroPostCard from '@/components/MicroPostCard'
+import MicroPostList from '@/components/MicroPostList'
 
 export const dynamic = 'force-dynamic'
 
+const PAGE_SIZE = 20
+
 async function getMicroPosts() {
+  // Sabitlenenler her zaman öne gelsin, sonra tarih sırasıyla ilk 20
   const { data, error } = await supabase
     .from('micro_posts')
     .select('id, content, created_at, pinned')
     .order('pinned', { ascending: false })
     .order('created_at', { ascending: false })
+    .limit(PAGE_SIZE)
   if (error) return []
   return data
 }
 
+async function getTotalCount() {
+  const { count } = await supabase
+    .from('micro_posts')
+    .select('id', { count: 'exact', head: true })
+  return count ?? 0
+}
+
 export default async function MikroPage() {
-  const [posts, settings] = await Promise.all([getMicroPosts(), getSiteSettings()])
+  const [posts, total] = await Promise.all([getMicroPosts(), getTotalCount()])
+  const initialHasMore = total > PAGE_SIZE
 
   return (
     <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
@@ -28,18 +40,7 @@ export default async function MikroPage() {
         />
 
         <div className="px-5 pb-16 sm:px-16 sm:pb-20">
-          {posts.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '80px 0', color: '#9ca3af' }}>
-              <div style={{ fontSize: '32px', marginBottom: '12px' }}>💭</div>
-              <p style={{ fontSize: '14px', margin: 0 }}>Henüz mikro yazı yok.</p>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', paddingTop: '32px' }}>
-              {posts.map(post => (
-                <MicroPostCard key={post.id} post={post} />
-              ))}
-            </div>
-          )}
+          <MicroPostList initialPosts={posts} initialHasMore={initialHasMore} />
         </div>
 
       </div>
