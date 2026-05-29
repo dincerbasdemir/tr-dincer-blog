@@ -1,6 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Plus_Jakarta_Sans, Inter, DM_Sans } from 'next/font/google'
+import CookieBanner from '@/components/CookieBanner'
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -50,6 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="tr" className={`${plusJakarta.variable} ${inter.variable} ${dmSans.variable}`}>
       <body className="text-gray-900 antialiased" style={{ backgroundColor: '#f5f5f5' }}>
         {children}
+        <CookieBanner />
       </body>
     </html>
   )
