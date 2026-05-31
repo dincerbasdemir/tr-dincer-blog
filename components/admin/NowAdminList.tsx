@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState, useTransition, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 type NowItem = {
@@ -13,23 +13,37 @@ type NowItem = {
   created_at: string
 }
 
+type EditState = {
+  title: string
+  subtitle: string
+  url: string
+}
+
 const CATEGORY_META = {
-  reading:   { label: 'Okuyorum',  emoji: '📖', color: '#dbeafe', text: '#1d4ed8' },
+  reading:   { label: 'Okuyorum',   emoji: '📖', color: '#dbeafe', text: '#1d4ed8' },
   listening: { label: 'Dinliyorum', emoji: '🎵', color: '#fce7f3', text: '#be185d' },
   working:   { label: 'Çalışıyorum', emoji: '💻', color: '#dcfce7', text: '#15803d' },
-  watching:  { label: 'İzliyorum', emoji: '📺', color: '#fef9c3', text: '#a16207' },
+  watching:  { label: 'İzliyorum',  emoji: '📺', color: '#fef9c3', text: '#a16207' },
 }
 
 const CATEGORIES = ['reading', 'listening', 'working', 'watching'] as const
 
+const inputStyle: React.CSSProperties = {
+  width: '100%', padding: '7px 10px', border: '1px solid #e5e7eb',
+  borderRadius: '6px', fontSize: '13px', outline: 'none', boxSizing: 'border-box',
+}
+
 export default function NowAdminList({ initialItems, initialNote }: { initialItems: NowItem[], initialNote: string }) {
   const router = useRouter()
-  const [isPending, startTransition] = useTransition()
+  const [, startTransition] = useTransition()
 
   /* ── Note state ── */
   const [note, setNote] = useState(initialNote)
   const [noteSaving, setNoteSaving] = useState(false)
   const [noteSaved, setNoteSaved] = useState(false)
+
+  // Sync note when server refreshes
+  useEffect(() => { setNote(initialNote) }, [initialNote])
 
   async function handleNoteSave() {
     setNoteSaving(true)
@@ -48,7 +62,7 @@ export default function NowAdminList({ initialItems, initialNote }: { initialIte
     }
   }
 
-  /* ── Form state ── */
+  /* ── Add form state ── */
   const [form, setForm] = useState({
     category: 'reading' as typeof CATEGORIES[number],
     title: '',
@@ -83,6 +97,31 @@ export default function NowAdminList({ initialItems, initialNote }: { initialIte
     }
   }
 
+  /* ── Edit state ── */
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editForm, setEditForm] = useState<EditState>({ title: '', subtitle: '', url: '' })
+  const [editSaving, setEditSaving] = useState(false)
+
+  function startEdit(item: NowItem) {
+    setEditingId(item.id)
+    setEditForm({ title: item.title, subtitle: item.subtitle || '', url: item.url || '' })
+  }
+
+  async function handleEditSave(id: string) {
+    setEditSaving(true)
+    try {
+      await fetch(`/api/admin/now/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editForm),
+      })
+      setEditingId(null)
+      startTransition(() => router.refresh())
+    } finally {
+      setEditSaving(false)
+    }
+  }
+
   async function handleDelete(id: string) {
     if (!confirm('Bu öğeyi silmek istediğine emin misin?')) return
     await fetch(`/api/admin/now/${id}`, { method: 'DELETE' })
@@ -100,11 +139,8 @@ export default function NowAdminList({ initialItems, initialNote }: { initialIte
 
       {/* ── Note / serbest metin ── */}
       <div style={{
-        backgroundColor: '#ffffff',
-        border: '1px solid #f0f0f0',
-        borderRadius: '12px',
-        padding: '24px',
-        marginBottom: '24px',
+        backgroundColor: '#ffffff', border: '1px solid #f0f0f0',
+        borderRadius: '12px', padding: '24px', marginBottom: '24px',
       }}>
         <h2 style={{ fontSize: '15px', fontWeight: 700, color: '#111827', marginBottom: '6px' }}>
           Not / Metin
@@ -118,17 +154,10 @@ export default function NowAdminList({ initialItems, initialNote }: { initialIte
           rows={5}
           placeholder="Şu an İstanbul'dayım. Yeni bir projeye başlıyorum..."
           style={{
-            width: '100%',
-            padding: '10px 12px',
-            border: '1px solid #e5e7eb',
-            borderRadius: '8px',
-            fontSize: '14px',
-            lineHeight: '22px',
-            color: '#111827',
-            resize: 'vertical',
-            outline: 'none',
-            boxSizing: 'border-box',
-            fontFamily: 'inherit',
+            width: '100%', padding: '10px 12px', border: '1px solid #e5e7eb',
+            borderRadius: '8px', fontSize: '14px', lineHeight: '22px',
+            color: '#111827', resize: 'vertical', outline: 'none',
+            boxSizing: 'border-box', fontFamily: 'inherit',
           }}
         />
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '12px' }}>
@@ -136,15 +165,9 @@ export default function NowAdminList({ initialItems, initialNote }: { initialIte
             onClick={handleNoteSave}
             disabled={noteSaving}
             style={{
-              padding: '9px 20px',
-              backgroundColor: '#111827',
-              color: '#ffffff',
-              border: 'none',
-              borderRadius: '8px',
-              fontSize: '13px',
-              fontWeight: 700,
-              cursor: noteSaving ? 'not-allowed' : 'pointer',
-              opacity: noteSaving ? 0.6 : 1,
+              padding: '9px 20px', backgroundColor: '#111827', color: '#ffffff',
+              border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 700,
+              cursor: noteSaving ? 'not-allowed' : 'pointer', opacity: noteSaving ? 0.6 : 1,
             }}
           >
             {noteSaving ? 'Kaydediliyor…' : 'Kaydet'}
@@ -157,18 +180,14 @@ export default function NowAdminList({ initialItems, initialNote }: { initialIte
 
       {/* ── Add form ── */}
       <div style={{
-        backgroundColor: '#ffffff',
-        border: '1px solid #f0f0f0',
-        borderRadius: '12px',
-        padding: '24px',
-        marginBottom: '32px',
+        backgroundColor: '#ffffff', border: '1px solid #f0f0f0',
+        borderRadius: '12px', padding: '24px', marginBottom: '32px',
       }}>
         <h2 style={{ fontSize: '15px', fontWeight: 700, color: '#111827', marginBottom: '20px' }}>
           Yeni Ekle
         </h2>
 
         <form onSubmit={handleAdd}>
-          {/* Category tabs */}
           <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', flexWrap: 'wrap' }}>
             {CATEGORIES.map(cat => {
               const meta = CATEGORY_META[cat]
@@ -179,14 +198,11 @@ export default function NowAdminList({ initialItems, initialNote }: { initialIte
                   type="button"
                   onClick={() => setForm(f => ({ ...f, category: cat }))}
                   style={{
-                    padding: '6px 14px',
-                    borderRadius: '999px',
+                    padding: '6px 14px', borderRadius: '999px',
                     border: active ? 'none' : '1px solid #e5e7eb',
                     backgroundColor: active ? meta.color : '#ffffff',
                     color: active ? meta.text : '#6b7280',
-                    fontSize: '13px',
-                    fontWeight: active ? 700 : 400,
-                    cursor: 'pointer',
+                    fontSize: '13px', fontWeight: active ? 700 : 400, cursor: 'pointer',
                   }}
                 >
                   {meta.emoji} {meta.label}
@@ -197,71 +213,31 @@ export default function NowAdminList({ initialItems, initialNote }: { initialIte
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
             <div>
-              <label style={{ fontSize: '12px', fontWeight: 600, color: '#6b7280', display: 'block', marginBottom: '6px' }}>
-                Başlık *
-              </label>
-              <input
-                type="text"
-                value={form.title}
-                onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-                placeholder="Örn: Siddhartha"
-                required
-                style={{
-                  width: '100%', padding: '9px 12px', border: '1px solid #e5e7eb',
-                  borderRadius: '8px', fontSize: '14px', outline: 'none', boxSizing: 'border-box',
-                }}
-              />
+              <label style={{ fontSize: '12px', fontWeight: 600, color: '#6b7280', display: 'block', marginBottom: '6px' }}>Başlık *</label>
+              <input type="text" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
+                placeholder="Örn: Siddhartha" required style={{ ...inputStyle, padding: '9px 12px', fontSize: '14px' }} />
             </div>
             <div>
-              <label style={{ fontSize: '12px', fontWeight: 600, color: '#6b7280', display: 'block', marginBottom: '6px' }}>
-                Alt başlık / yazar
-              </label>
-              <input
-                type="text"
-                value={form.subtitle}
-                onChange={e => setForm(f => ({ ...f, subtitle: e.target.value }))}
-                placeholder="Örn: Hermann Hesse"
-                style={{
-                  width: '100%', padding: '9px 12px', border: '1px solid #e5e7eb',
-                  borderRadius: '8px', fontSize: '14px', outline: 'none', boxSizing: 'border-box',
-                }}
-              />
+              <label style={{ fontSize: '12px', fontWeight: 600, color: '#6b7280', display: 'block', marginBottom: '6px' }}>Alt başlık / yazar</label>
+              <input type="text" value={form.subtitle} onChange={e => setForm(f => ({ ...f, subtitle: e.target.value }))}
+                placeholder="Örn: Hermann Hesse" style={{ ...inputStyle, padding: '9px 12px', fontSize: '14px' }} />
             </div>
           </div>
 
           <div style={{ marginBottom: '16px' }}>
-            <label style={{ fontSize: '12px', fontWeight: 600, color: '#6b7280', display: 'block', marginBottom: '6px' }}>
-              Link (opsiyonel)
-            </label>
-            <input
-              type="url"
-              value={form.url}
-              onChange={e => setForm(f => ({ ...f, url: e.target.value }))}
-              placeholder="https://"
-              style={{
-                width: '100%', padding: '9px 12px', border: '1px solid #e5e7eb',
-                borderRadius: '8px', fontSize: '14px', outline: 'none', boxSizing: 'border-box',
-              }}
-            />
+            <label style={{ fontSize: '12px', fontWeight: 600, color: '#6b7280', display: 'block', marginBottom: '6px' }}>Link (opsiyonel)</label>
+            <input type="url" value={form.url} onChange={e => setForm(f => ({ ...f, url: e.target.value }))}
+              placeholder="https://" style={{ ...inputStyle, padding: '9px 12px', fontSize: '14px' }} />
           </div>
 
           {error && <p style={{ fontSize: '12px', color: '#d00202', marginBottom: '12px' }}>{error}</p>}
 
-          <button
-            type="submit"
-            disabled={saving || !form.title}
+          <button type="submit" disabled={saving || !form.title}
             style={{
-              padding: '10px 24px',
-              backgroundColor: '#111827',
-              color: '#ffffff',
-              border: 'none',
-              borderRadius: '8px',
-              fontSize: '14px',
-              fontWeight: 700,
-              cursor: saving ? 'not-allowed' : 'pointer',
-              opacity: saving ? 0.6 : 1,
-            }}
-          >
+              padding: '10px 24px', backgroundColor: '#111827', color: '#ffffff',
+              border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: 700,
+              cursor: saving ? 'not-allowed' : 'pointer', opacity: saving ? 0.6 : 1,
+            }}>
             {saving ? 'Ekleniyor…' : 'Ekle'}
           </button>
         </form>
@@ -279,43 +255,81 @@ export default function NowAdminList({ initialItems, initialNote }: { initialIte
                 display: 'inline-flex', alignItems: 'center', gap: '6px',
                 backgroundColor: meta.color, color: meta.text,
                 padding: '4px 12px', borderRadius: '999px',
-                fontSize: '12px', fontWeight: 700,
-                marginBottom: '12px',
+                fontSize: '12px', fontWeight: 700, marginBottom: '12px',
               }}>
                 {meta.emoji} {meta.label}
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {items.map(item => (
-                  <div
-                    key={item.id}
-                    style={{
-                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                      backgroundColor: '#ffffff', border: '1px solid #f0f0f0',
-                      borderRadius: '10px', padding: '12px 16px',
-                    }}
-                  >
-                    <div>
-                      <div style={{ fontSize: '14px', fontWeight: 600, color: '#111827' }}>
-                        {item.url
-                          ? <a href={item.url} target="_blank" rel="noopener noreferrer" style={{ color: '#111827', textDecoration: 'none' }}>{item.title} ↗</a>
-                          : item.title
-                        }
+                  <div key={item.id} style={{
+                    backgroundColor: '#ffffff', border: '1px solid #f0f0f0',
+                    borderRadius: '10px', padding: '12px 16px',
+                  }}>
+                    {editingId === item.id ? (
+                      /* ── Edit mode ── */
+                      <div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '8px' }}>
+                          <input type="text" value={editForm.title}
+                            onChange={e => setEditForm(f => ({ ...f, title: e.target.value }))}
+                            placeholder="Başlık" style={inputStyle} />
+                          <input type="text" value={editForm.subtitle}
+                            onChange={e => setEditForm(f => ({ ...f, subtitle: e.target.value }))}
+                            placeholder="Alt başlık / yazar" style={inputStyle} />
+                        </div>
+                        <input type="url" value={editForm.url}
+                          onChange={e => setEditForm(f => ({ ...f, url: e.target.value }))}
+                          placeholder="https://" style={{ ...inputStyle, marginBottom: '10px' }} />
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                          <button onClick={() => handleEditSave(item.id)} disabled={editSaving}
+                            style={{
+                              padding: '6px 16px', backgroundColor: '#111827', color: '#fff',
+                              border: 'none', borderRadius: '6px', fontSize: '12px', fontWeight: 700,
+                              cursor: editSaving ? 'not-allowed' : 'pointer',
+                            }}>
+                            {editSaving ? 'Kaydediliyor…' : 'Kaydet'}
+                          </button>
+                          <button onClick={() => setEditingId(null)}
+                            style={{
+                              padding: '6px 16px', backgroundColor: '#f3f4f6', color: '#6b7280',
+                              border: 'none', borderRadius: '6px', fontSize: '12px', fontWeight: 600, cursor: 'pointer',
+                            }}>
+                            İptal
+                          </button>
+                        </div>
                       </div>
-                      {item.subtitle && (
-                        <div style={{ fontSize: '12px', color: '#9ca3af', marginTop: '2px' }}>{item.subtitle}</div>
-                      )}
-                    </div>
-                    <button
-                      onClick={() => handleDelete(item.id)}
-                      style={{
-                        padding: '5px 12px', border: '1px solid #fecaca',
-                        borderRadius: '6px', backgroundColor: '#fff5f5',
-                        color: '#d00202', fontSize: '12px', fontWeight: 600,
-                        cursor: 'pointer', flexShrink: 0, marginLeft: '12px',
-                      }}
-                    >
-                      Sil
-                    </button>
+                    ) : (
+                      /* ── View mode ── */
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <div>
+                          <div style={{ fontSize: '14px', fontWeight: 600, color: '#111827' }}>
+                            {item.url
+                              ? <a href={item.url} target="_blank" rel="noopener noreferrer" style={{ color: '#111827', textDecoration: 'none' }}>{item.title} ↗</a>
+                              : item.title}
+                          </div>
+                          {item.subtitle && (
+                            <div style={{ fontSize: '12px', color: '#9ca3af', marginTop: '2px' }}>{item.subtitle}</div>
+                          )}
+                        </div>
+                        <div style={{ display: 'flex', gap: '6px', marginLeft: '12px', flexShrink: 0 }}>
+                          <button onClick={() => startEdit(item)}
+                            style={{
+                              padding: '5px 12px', border: '1px solid #e5e7eb',
+                              borderRadius: '6px', backgroundColor: '#f9fafb',
+                              color: '#374151', fontSize: '12px', fontWeight: 600, cursor: 'pointer',
+                            }}>
+                            Düzenle
+                          </button>
+                          <button onClick={() => handleDelete(item.id)}
+                            style={{
+                              padding: '5px 12px', border: '1px solid #fecaca',
+                              borderRadius: '6px', backgroundColor: '#fff5f5',
+                              color: '#d00202', fontSize: '12px', fontWeight: 600, cursor: 'pointer',
+                            }}>
+                            Sil
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

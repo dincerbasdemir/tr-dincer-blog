@@ -10,6 +10,7 @@ export default function MicroComposer() {
   const [content, setContent] = useState('')
   const [pinned, setPinned] = useState(false)
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [editorKey, setEditorKey] = useState(0)
   const router = useRouter()
 
   // HTML tag'lerini çıkar karakter sayımı için
@@ -37,6 +38,7 @@ export default function MicroComposer() {
 
       setContent('')
       setPinned(false)
+      setEditorKey(k => k + 1)
       setStatus('success')
       setTimeout(() => setStatus('idle'), 2000)
       router.refresh()
@@ -56,7 +58,7 @@ export default function MicroComposer() {
       boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
     }}>
       <form onSubmit={handleSubmit}>
-        <MicroEditor content={content} onChange={setContent} />
+        <MicroEditor key={editorKey} content={content} onChange={setContent} />
 
         <div style={{
           display: 'flex',
