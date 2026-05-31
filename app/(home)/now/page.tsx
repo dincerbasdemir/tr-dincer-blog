@@ -68,7 +68,7 @@ export default async function NowPage() {
         <div className="px-5 pb-20 sm:px-16">
 
           {/* Last updated */}
-          <p style={{ fontSize: '13px', color: '#d1d5db', marginBottom: '40px' }}>
+          <p style={{ fontSize: '13px', color: '#d1d5db', marginBottom: '40px', marginTop: '32px' }}>
             Son güncelleme: {dateStr} · <a href="https://nownownow.com/about" target="_blank" rel="noopener noreferrer" style={{ color: '#d1d5db', textDecoration: 'underline', textUnderlineOffset: '2px' }}>Bu nedir?</a>
           </p>
 
