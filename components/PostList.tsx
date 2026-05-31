@@ -58,7 +58,7 @@ export default function PostList({
           <Link
             href={`/${post.slug}`}
             style={{ display: 'block', padding: '32px 0', textDecoration: 'none' }}
-            className="group"
+            className="group post-link"
           >
             {/* Tarih + Kategoriler */}
             <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '6px', marginBottom: '12px' }}>
@@ -80,8 +80,8 @@ export default function PostList({
 
             {/* Başlık */}
             <h2
-              className="group-hover:text-[#d00202] transition-colors"
-              style={{ fontSize: '26px', lineHeight: '36px', fontWeight: 700, color: '#111827', letterSpacing: '-0.02em', marginBottom: '10px' }}
+              className="post-title"
+              style={{ fontSize: '26px', lineHeight: '36px', fontWeight: 700, color: '#111827', letterSpacing: '-0.02em', marginBottom: '10px', transition: 'color 0.15s' }}
             >
               {post.title}
             </h2>
@@ -97,6 +97,10 @@ export default function PostList({
       ))}
 
       {/* Daha Fazla */}
+      <style>{`
+        .post-link:hover .post-title { color: #d00202 !important; }
+      `}</style>
+
       {hasMore && (
         <div style={{ paddingTop: '16px', borderTop: '1px solid #f0f0f0' }}>
           <button
