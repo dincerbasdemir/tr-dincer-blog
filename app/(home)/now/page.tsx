@@ -98,7 +98,7 @@ export default async function NowPage() {
                     <div style={{ marginBottom: '16px' }}>
                       <h2 style={{
                         fontSize: '12px', fontWeight: 700, letterSpacing: '0.08em',
-                        textTransform: 'uppercase', color: '#9ca3af', margin: 0,
+                        textTransform: 'uppercase', color: '#d00202', margin: 0,
                       }}>
                         {meta.label}
                       </h2>
