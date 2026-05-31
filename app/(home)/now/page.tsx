@@ -95,11 +95,7 @@ export default async function NowPage() {
                 const meta = CATEGORY_META[cat]
                 return (
                   <section key={cat}>
-                    <div style={{
-                      display: 'flex', alignItems: 'center', gap: '10px',
-                      marginBottom: '16px',
-                    }}>
-                      <span style={{ fontSize: '18px', lineHeight: 1 }}>{meta.emoji}</span>
+                    <div style={{ marginBottom: '16px' }}>
                       <h2 style={{
                         fontSize: '12px', fontWeight: 700, letterSpacing: '0.08em',
                         textTransform: 'uppercase', color: '#9ca3af', margin: 0,
@@ -120,7 +116,7 @@ export default async function NowPage() {
                               target="_blank"
                               rel="noopener noreferrer"
                               style={{
-                                fontSize: '17px', fontWeight: 600, color: '#111827',
+                                fontSize: '17px', fontWeight: 600, color: '#000000',
                                 textDecoration: 'none', letterSpacing: '-0.01em', lineHeight: 1.4,
                               }}
                             >
@@ -129,7 +125,7 @@ export default async function NowPage() {
                             </a>
                           ) : (
                             <span style={{
-                              fontSize: '17px', fontWeight: 600, color: '#111827',
+                              fontSize: '17px', fontWeight: 600, color: '#000000',
                               letterSpacing: '-0.01em', lineHeight: 1.4,
                             }}>
                               {item.title}
