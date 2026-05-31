@@ -106,7 +106,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
         <div className="px-5 sm:px-16 pt-10 sm:pt-14">
 
           {/* Kategori + Okuma Süresi */}
-          <div className="flex items-center gap-2 mb-8 text-xs tracking-widest uppercase font-semibold" style={{ color: '#A30000' }}>
+          <div className="flex items-center gap-2 mb-8 text-xs tracking-widest uppercase font-semibold" style={{ color: '#000000' }}>
             {post.categories?.[0] && <span>{post.categories[0]}</span>}
             {post.reading_time && (
               <>
