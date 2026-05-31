@@ -22,9 +22,31 @@ const CATEGORY_META = {
 
 const CATEGORIES = ['reading', 'listening', 'working', 'watching'] as const
 
-export default function NowAdminList({ initialItems }: { initialItems: NowItem[] }) {
+export default function NowAdminList({ initialItems, initialNote }: { initialItems: NowItem[], initialNote: string }) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
+
+  /* ── Note state ── */
+  const [note, setNote] = useState(initialNote)
+  const [noteSaving, setNoteSaving] = useState(false)
+  const [noteSaved, setNoteSaved] = useState(false)
+
+  async function handleNoteSave() {
+    setNoteSaving(true)
+    setNoteSaved(false)
+    try {
+      await fetch('/api/admin/now-note', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ note }),
+      })
+      setNoteSaved(true)
+      setTimeout(() => setNoteSaved(false), 2500)
+      startTransition(() => router.refresh())
+    } finally {
+      setNoteSaving(false)
+    }
+  }
 
   /* ── Form state ── */
   const [form, setForm] = useState({
@@ -75,6 +97,63 @@ export default function NowAdminList({ initialItems }: { initialItems: NowItem[]
 
   return (
     <div style={{ padding: '32px', maxWidth: '780px' }}>
+
+      {/* ── Note / serbest metin ── */}
+      <div style={{
+        backgroundColor: '#ffffff',
+        border: '1px solid #f0f0f0',
+        borderRadius: '12px',
+        padding: '24px',
+        marginBottom: '24px',
+      }}>
+        <h2 style={{ fontSize: '15px', fontWeight: 700, color: '#111827', marginBottom: '6px' }}>
+          Not / Metin
+        </h2>
+        <p style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '14px' }}>
+          Sayfanın üstünde görünür. HTML kullanabilirsin (ör. &lt;b&gt;, &lt;a&gt;, &lt;br&gt;).
+        </p>
+        <textarea
+          value={note}
+          onChange={e => setNote(e.target.value)}
+          rows={5}
+          placeholder="Şu an İstanbul'dayım. Yeni bir projeye başlıyorum..."
+          style={{
+            width: '100%',
+            padding: '10px 12px',
+            border: '1px solid #e5e7eb',
+            borderRadius: '8px',
+            fontSize: '14px',
+            lineHeight: '22px',
+            color: '#111827',
+            resize: 'vertical',
+            outline: 'none',
+            boxSizing: 'border-box',
+            fontFamily: 'inherit',
+          }}
+        />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '12px' }}>
+          <button
+            onClick={handleNoteSave}
+            disabled={noteSaving}
+            style={{
+              padding: '9px 20px',
+              backgroundColor: '#111827',
+              color: '#ffffff',
+              border: 'none',
+              borderRadius: '8px',
+              fontSize: '13px',
+              fontWeight: 700,
+              cursor: noteSaving ? 'not-allowed' : 'pointer',
+              opacity: noteSaving ? 0.6 : 1,
+            }}
+          >
+            {noteSaving ? 'Kaydediliyor…' : 'Kaydet'}
+          </button>
+          {noteSaved && (
+            <span style={{ fontSize: '13px', color: '#16a34a', fontWeight: 600 }}>✓ Kaydedildi</span>
+          )}
+        </div>
+      </div>
 
       {/* ── Add form ── */}
       <div style={{

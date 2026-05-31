@@ -2,16 +2,6 @@ import { supabase, getSiteSettings } from '@/lib/supabase'
 import PostList from '@/components/PostList'
 import SharedHero from '@/components/SharedHero'
 import SubscribeForm from '@/components/SubscribeForm'
-import NowSection from '@/components/NowSection'
-
-async function getNowItems() {
-  const { data } = await supabase
-    .from('now_items')
-    .select('id, category, title, subtitle, url')
-    .order('sort_order')
-    .order('created_at', { ascending: false })
-  return data || []
-}
 
 async function getPosts() {
   const { data, error } = await supabase
@@ -25,7 +15,7 @@ async function getPosts() {
 }
 
 export default async function Home() {
-  const [posts, settings, nowItems] = await Promise.all([getPosts(), getSiteSettings(), getNowItems()])
+  const [posts, settings] = await Promise.all([getPosts(), getSiteSettings()])
 
   const siteTagline = settings.site_tagline || 'Ağacı sev, yeşili koru, ayıyı öp.'
   const siteDescription = settings.site_description || 'Teknoloji, tasarım, pazarlama ve günlük düşünceler üzerine sessiz bir köşe.'
@@ -49,8 +39,6 @@ export default async function Home() {
           description={siteDescription}
           activeTab="/"
         />
-
-        <NowSection items={nowItems} />
 
         <div className="px-5 pb-16 sm:px-16 sm:pb-20">
           <PostList initialPosts={posts} initialOffset={10} />

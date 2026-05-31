@@ -1,23 +1,25 @@
-import { createClient } from '@supabase/supabase-js'
+import { createAdminClient } from '@/lib/supabase-admin'
 import AdminShell from '@/components/admin/AdminShell'
 import NowAdminList from '@/components/admin/NowAdminList'
-import { headers } from 'next/headers'
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
-)
 
 export default async function AdminSimdiPage() {
-  const headersList = headers()
-  const pathname = headersList.get('x-pathname') || '/admin/simdi'
+  const supabase = createAdminClient()
 
-  const { data: items } = await supabase
-    .from('now_items')
-    .select('*')
-    .order('category')
-    .order('sort_order')
-    .order('created_at', { ascending: false })
+  const [{ data: items }, { data: settings }] = await Promise.all([
+    supabase
+      .from('now_items')
+      .select('*')
+      .order('category')
+      .order('sort_order')
+      .order('created_at', { ascending: false }),
+    supabase
+      .from('site_settings')
+      .select('key, value')
+      .eq('key', 'now_note')
+      .single(),
+  ])
+
+  const nowNote = settings?.value || ''
 
   return (
     <AdminShell currentPath="/admin/simdi">
@@ -26,11 +28,12 @@ export default async function AdminSimdiPage() {
           Şu An
         </h1>
         <p style={{ fontSize: '13px', color: '#9ca3af', marginBottom: '20px' }}>
-          Okuyorum, dinliyorum, üzerinde çalışıyorum — <a href="/now" target="_blank" style={{ color: '#d00202', textDecoration: 'none' }}>/now sayfasında</a> görünür.
+          Okuyorum, dinliyorum, üzerinde çalışıyorum —{' '}
+          <a href="/now" target="_blank" style={{ color: '#d00202', textDecoration: 'none' }}>/now sayfasında</a> görünür.
         </p>
       </div>
 
-      <NowAdminList initialItems={items || []} />
+      <NowAdminList initialItems={items || []} initialNote={nowNote} />
     </AdminShell>
   )
 }
