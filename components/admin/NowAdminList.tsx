@@ -38,28 +38,45 @@ export default function NowAdminList({ initialItems, initialNote }: { initialIte
   const [, startTransition] = useTransition()
 
   /* ── Note state ── */
-  const [note, setNote] = useState(initialNote)
+  const [savedNote, setSavedNote] = useState(initialNote)
+  const [noteInput, setNoteInput] = useState('')
+  const [noteEditing, setNoteEditing] = useState(false)
   const [noteSaving, setNoteSaving] = useState(false)
-  const [noteSaved, setNoteSaved] = useState(false)
 
-  // Sync note when server refreshes
-  useEffect(() => { setNote(initialNote) }, [initialNote])
+  // Sunucu refresh olunca saved note'u güncelle
+  useEffect(() => { setSavedNote(initialNote) }, [initialNote])
+
+  function startNoteEdit() {
+    setNoteInput(savedNote)
+    setNoteEditing(true)
+  }
 
   async function handleNoteSave() {
     setNoteSaving(true)
-    setNoteSaved(false)
     try {
       await fetch('/api/admin/now-note', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ note }),
+        body: JSON.stringify({ note: noteInput }),
       })
-      setNoteSaved(true)
-      setTimeout(() => setNoteSaved(false), 2500)
+      setSavedNote(noteInput)
+      setNoteInput('')
+      setNoteEditing(false)
       startTransition(() => router.refresh())
     } finally {
       setNoteSaving(false)
     }
+  }
+
+  async function handleNoteDelete() {
+    if (!confirm('Notu silmek istiyor musun?')) return
+    await fetch('/api/admin/now-note', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ note: '' }),
+    })
+    setSavedNote('')
+    startTransition(() => router.refresh())
   }
 
   /* ── Add form state ── */
@@ -142,40 +159,91 @@ export default function NowAdminList({ initialItems, initialNote }: { initialIte
         backgroundColor: '#ffffff', border: '1px solid #f0f0f0',
         borderRadius: '12px', padding: '24px', marginBottom: '24px',
       }}>
-        <h2 style={{ fontSize: '15px', fontWeight: 700, color: '#111827', marginBottom: '6px' }}>
-          Not / Metin
-        </h2>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+          <h2 style={{ fontSize: '15px', fontWeight: 700, color: '#111827', margin: 0 }}>
+            Not / Metin
+          </h2>
+          {!noteEditing && !savedNote && (
+            <button onClick={() => setNoteEditing(true)}
+              style={{
+                padding: '5px 14px', border: '1px solid #e5e7eb', borderRadius: '6px',
+                backgroundColor: '#f9fafb', color: '#374151', fontSize: '12px',
+                fontWeight: 600, cursor: 'pointer',
+              }}>
+              + Ekle
+            </button>
+          )}
+        </div>
         <p style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '14px' }}>
           Sayfanın üstünde görünür. HTML kullanabilirsin (ör. &lt;b&gt;, &lt;a&gt;, &lt;br&gt;).
         </p>
-        <textarea
-          value={note}
-          onChange={e => setNote(e.target.value)}
-          rows={5}
-          placeholder="Şu an İstanbul'dayım. Yeni bir projeye başlıyorum..."
-          style={{
-            width: '100%', padding: '10px 12px', border: '1px solid #e5e7eb',
-            borderRadius: '8px', fontSize: '14px', lineHeight: '22px',
-            color: '#111827', resize: 'vertical', outline: 'none',
-            boxSizing: 'border-box', fontFamily: 'inherit',
+
+        {/* Kayıtlı not kartı */}
+        {savedNote && !noteEditing && (
+          <div style={{
+            border: '1px solid #f0f0f0', borderRadius: '8px', padding: '12px 16px',
+            fontSize: '14px', lineHeight: '22px', color: '#374151', marginBottom: '12px',
+            whiteSpace: 'pre-wrap',
           }}
-        />
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '12px' }}>
-          <button
-            onClick={handleNoteSave}
-            disabled={noteSaving}
-            style={{
-              padding: '9px 20px', backgroundColor: '#111827', color: '#ffffff',
-              border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 700,
-              cursor: noteSaving ? 'not-allowed' : 'pointer', opacity: noteSaving ? 0.6 : 1,
-            }}
-          >
-            {noteSaving ? 'Kaydediliyor…' : 'Kaydet'}
-          </button>
-          {noteSaved && (
-            <span style={{ fontSize: '13px', color: '#16a34a', fontWeight: 600 }}>✓ Kaydedildi</span>
-          )}
-        </div>
+            dangerouslySetInnerHTML={{ __html: savedNote }}
+          />
+        )}
+        {savedNote && !noteEditing && (
+          <div style={{ display: 'flex', gap: '6px' }}>
+            <button onClick={startNoteEdit}
+              style={{
+                padding: '5px 14px', border: '1px solid #e5e7eb', borderRadius: '6px',
+                backgroundColor: '#f9fafb', color: '#374151', fontSize: '12px',
+                fontWeight: 600, cursor: 'pointer',
+              }}>
+              Düzenle
+            </button>
+            <button onClick={handleNoteDelete}
+              style={{
+                padding: '5px 14px', border: '1px solid #fecaca', borderRadius: '6px',
+                backgroundColor: '#fff5f5', color: '#d00202', fontSize: '12px',
+                fontWeight: 600, cursor: 'pointer',
+              }}>
+              Sil
+            </button>
+          </div>
+        )}
+
+        {/* Textarea — yeni ekle veya düzenle modunda */}
+        {noteEditing && (
+          <>
+            <textarea
+              value={noteInput}
+              onChange={e => setNoteInput(e.target.value)}
+              rows={5}
+              autoFocus
+              placeholder="Şu an İstanbul'dayım. Yeni bir projeye başlıyorum..."
+              style={{
+                width: '100%', padding: '10px 12px', border: '1px solid #e5e7eb',
+                borderRadius: '8px', fontSize: '14px', lineHeight: '22px',
+                color: '#111827', resize: 'vertical', outline: 'none',
+                boxSizing: 'border-box', fontFamily: 'inherit', marginBottom: '12px',
+              }}
+            />
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button onClick={handleNoteSave} disabled={noteSaving}
+                style={{
+                  padding: '9px 20px', backgroundColor: '#111827', color: '#ffffff',
+                  border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 700,
+                  cursor: noteSaving ? 'not-allowed' : 'pointer', opacity: noteSaving ? 0.6 : 1,
+                }}>
+                {noteSaving ? 'Kaydediliyor…' : 'Kaydet'}
+              </button>
+              <button onClick={() => { setNoteEditing(false); setNoteInput('') }}
+                style={{
+                  padding: '9px 16px', backgroundColor: '#f3f4f6', color: '#6b7280',
+                  border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 600, cursor: 'pointer',
+                }}>
+                İptal
+              </button>
+            </div>
+          </>
+        )}
       </div>
 
       {/* ── Add form ── */}

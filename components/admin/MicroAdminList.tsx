@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 import { tr } from 'date-fns/locale'
@@ -11,6 +11,9 @@ export default function MicroAdminList({ posts: initial }: { posts: Post[] }) {
   const [posts, setPosts] = useState(initial)
   const [loadingId, setLoadingId] = useState<string | null>(null)
   const router = useRouter()
+
+  // Sunucu refresh olunca listeyi güncelle
+  useEffect(() => { setPosts(initial) }, [initial])
 
   async function handleDelete(id: string) {
     if (!confirm('Bu mikro yazıyı silmek istiyor musun?')) return
