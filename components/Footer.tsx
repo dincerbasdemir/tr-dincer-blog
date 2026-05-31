@@ -31,6 +31,7 @@ export default function Footer() {
             <div className="flex flex-col gap-2">
               {[
                 { name: 'Ben', href: '/ben' },
+                { name: 'Şu An', href: '/now' },
                 { name: 'Arama', href: '/arama' },
                 { name: 'RSS', href: '/rss.xml' },
                 { name: 'Mikro Blog', href: '/mikro' },
