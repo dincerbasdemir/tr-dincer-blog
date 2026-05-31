@@ -80,7 +80,7 @@ export default function PostList({
 
             {/* Başlık */}
             <h2
-              className="group-hover:opacity-70 transition-opacity"
+              className="group-hover:text-[#d00202] transition-colors"
               style={{ fontSize: '26px', lineHeight: '36px', fontWeight: 700, color: '#111827', letterSpacing: '-0.02em', marginBottom: '10px' }}
             >
               {post.title}
