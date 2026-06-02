@@ -86,6 +86,8 @@ export default function MicroPostCard({
         </button>
       )}
 
+      <style>{`.micro-content a { color: #d00202; text-decoration: none; } .micro-content a:hover { text-decoration: underline; }`}</style>
+
       {/* Footer */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '14px' }}>
         <span style={{ fontSize: '12px', color: '#9ca3af' }}>
