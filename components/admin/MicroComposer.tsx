@@ -15,7 +15,7 @@ export default function MicroComposer() {
 
   // HTML tag'lerini çıkar karakter sayımı için
   const plainText = content.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ')
-  const MAX_CHARS = 500
+  const MAX_CHARS = 5000
   const remaining = MAX_CHARS - plainText.length
   const isOverLimit = remaining < 0
 
@@ -72,7 +72,7 @@ export default function MicroComposer() {
             {/* Karakter sayacı */}
             <span style={{
               fontSize: '13px',
-              color: isOverLimit ? '#d00202' : remaining < 50 ? '#f59e0b' : '#9ca3af',
+              color: isOverLimit ? '#d00202' : remaining < 200 ? '#f59e0b' : '#9ca3af',
               fontWeight: isOverLimit ? 700 : 400,
             }}>
               {remaining}
