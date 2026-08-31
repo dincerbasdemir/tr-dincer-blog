@@ -29,7 +29,7 @@ export default async function AdminMikroPage({
 
   return (
     <AdminShell currentPath="/admin/mikro">
-      <div style={{ padding: '36px 40px', maxWidth: '860px' }}>
+      <div style={{ padding: 'clamp(20px, 5vw, 36px) clamp(16px, 5vw, 40px)', maxWidth: '860px' }}>
         {/* Header */}
         <div style={{ marginBottom: '28px' }}>
           <h1 style={{ fontSize: '22px', fontWeight: 800, color: '#111827', margin: '0 0 4px', letterSpacing: '-0.02em' }}>

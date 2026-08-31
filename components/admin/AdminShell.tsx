@@ -1,6 +1,18 @@
 'use client'
 
 import Link from 'next/link'
+import { useState } from 'react'
+
+const IcoMenu = () => (
+  <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+  </svg>
+)
+const IcoClose = () => (
+  <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+  </svg>
+)
 
 /* ── Icons ── */
 const IcoPosts = () => (
@@ -99,6 +111,8 @@ export default function AdminShell({
   children: React.ReactNode
   currentPath?: string
 }) {
+  const [mobileOpen, setMobileOpen] = useState(false)
+
   async function handleLogout() {
     try {
       await fetch('/api/admin/auth', { method: 'DELETE' })
@@ -108,15 +122,46 @@ export default function AdminShell({
   }
 
   return (
-    <div style={{
+    <div className="admin-root" style={{
       height: '100vh',
       display: 'flex',
       overflow: 'hidden',
       fontFamily: 'var(--font-jakarta), system-ui, sans-serif',
       backgroundColor: '#f5f6f8',
     }}>
+      {/* ── Mobil üst bar ── */}
+      <div className="admin-mobile-bar">
+        <button
+          onClick={() => setMobileOpen(true)}
+          aria-label="Menü"
+          style={{
+            border: 'none', background: 'none', padding: '4px', cursor: 'pointer',
+            color: '#111827', display: 'flex', alignItems: 'center',
+          }}
+        >
+          <IcoMenu />
+        </button>
+        <Link href="/admin" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{
+            width: '28px', height: '28px', backgroundColor: '#111827', borderRadius: '7px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <span style={{ color: 'white', fontSize: '12px', fontWeight: 800 }}>T</span>
+          </div>
+          <span style={{ fontSize: '14px', fontWeight: 800, color: '#111827', letterSpacing: '-0.01em' }}>tr.dincer</span>
+        </Link>
+      </div>
+
+      {/* ── Mobil backdrop ── */}
+      {mobileOpen && (
+        <div
+          className="admin-backdrop"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
       {/* ── Sidebar ── */}
-      <aside style={{
+      <aside className={`admin-sidebar${mobileOpen ? ' open' : ''}`} style={{
         width: '220px',
         flexShrink: 0,
         backgroundColor: '#ffffff',
@@ -125,6 +170,15 @@ export default function AdminShell({
         flexDirection: 'column',
         height: '100vh',
       }}>
+        {/* Mobil kapatma butonu */}
+        <button
+          className="admin-sidebar-close"
+          onClick={() => setMobileOpen(false)}
+          aria-label="Kapat"
+        >
+          <IcoClose />
+        </button>
+
 
         {/* Logo */}
         <div style={{ padding: '22px 20px 18px', borderBottom: '1px solid #f3f4f6' }}>
@@ -165,6 +219,7 @@ export default function AdminShell({
                   <Link
                     key={item.href}
                     href={item.href}
+                    onClick={() => setMobileOpen(false)}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -227,9 +282,72 @@ export default function AdminShell({
       </aside>
 
       {/* ── Content ── */}
-      <main style={{ flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+      <main className="admin-main" style={{ flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
         {children}
       </main>
+
+      <style>{`
+        .admin-mobile-bar { display: none; }
+        .admin-sidebar-close { display: none; }
+
+        @media (max-width: 767px) {
+          .admin-root {
+            display: block !important;
+            height: auto !important;
+            min-height: 100vh;
+            overflow: visible !important;
+          }
+          .admin-mobile-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            height: 54px;
+            padding: 0 16px;
+            background: #ffffff;
+            border-bottom: 1px solid #f0f0f0;
+          }
+          .admin-sidebar {
+            position: fixed !important;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            height: 100dvh !important;
+            width: 264px !important;
+            max-width: 82vw;
+            z-index: 60;
+            transform: translateX(-100%);
+            transition: transform 0.24s ease;
+            box-shadow: 0 0 48px rgba(0,0,0,0.18);
+          }
+          .admin-sidebar.open {
+            transform: translateX(0);
+          }
+          .admin-sidebar-close {
+            display: flex !important;
+            position: absolute;
+            top: 16px;
+            right: 14px;
+            border: none;
+            background: none;
+            padding: 4px;
+            cursor: pointer;
+            color: #6b7280;
+            z-index: 2;
+          }
+          .admin-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(17,24,39,0.4);
+            z-index: 55;
+          }
+          .admin-main {
+            overflow: visible !important;
+          }
+        }
+      `}</style>
     </div>
   )
 }

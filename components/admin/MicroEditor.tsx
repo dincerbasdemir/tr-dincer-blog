@@ -28,13 +28,15 @@ function ToolbarBtn({
       title={title}
       onClick={onClick}
       style={{
-        padding: '5px 8px',
+        minWidth: '34px',
+        height: '34px',
+        padding: '0 9px',
         borderRadius: '6px',
         border: 'none',
         backgroundColor: active ? '#111827' : 'transparent',
         color: active ? '#fff' : '#6b7280',
         cursor: 'pointer',
-        fontSize: '13px',
+        fontSize: '14px',
         fontWeight: 600,
         lineHeight: 1,
         display: 'flex',
@@ -61,7 +63,7 @@ export default function MicroEditor({ content, onChange }: MicroEditorProps) {
     },
     editorProps: {
       attributes: {
-        style: 'min-height:100px;outline:none;font-size:15px;line-height:26px;color:#1b1c1c;font-family:inherit',
+        style: 'min-height:120px;outline:none;font-size:16px;line-height:26px;color:#1b1c1c;font-family:inherit',
       },
     },
   })
