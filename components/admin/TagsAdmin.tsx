@@ -13,7 +13,8 @@ export default function TagsAdmin({ tags }: { tags: TagRow[] }) {
     return tags.filter(t => t.tag.toLocaleLowerCase('tr').includes(q) || t.slug.includes(q))
   }, [tags, query])
 
-  const singleUse = tags.filter(t => t.total === 1).length
+  // Google mantığıyla aynı: 2'den az YAYINLANMIŞ yazısı olan etiket indekslenmez
+  const notIndexed = tags.filter(t => t.published < 2).length
 
   async function copyTag(tag: string) {
     try {
@@ -33,7 +34,7 @@ export default function TagsAdmin({ tags }: { tags: TagRow[] }) {
           Etiketler
         </h1>
         <p style={{ fontSize: '13px', color: '#9ca3af', margin: 0 }}>
-          {tags.length} etiket · {singleUse} tanesi tek yazıda
+          {tags.length} etiket · {notIndexed} tanesi Google'da görünmüyor
         </p>
       </div>
 
@@ -44,8 +45,11 @@ export default function TagsAdmin({ tags }: { tags: TagRow[] }) {
         fontSize: '12.5px', lineHeight: '19px', color: '#6b7280',
       }}>
         Yeni yazı yayınlamadan önce buraya bakıp mevcut bir etiketi tekrar kullan — böylece
-        «wwdc» ve «WWDC» gibi ikizler oluşmaz. Etikete tıklayınca metni kopyalanır.
-        <span style={{ color: '#f59e0b', fontWeight: 600 }}> Sarı</span> olanlar sadece tek yazıda geçiyor.
+        «wwdc» ve «WWDC» gibi ikizler oluşmaz. Etikete tıklayınca metni kopyalanır. Sayı = etiketin
+        geçtiği toplam yazı.
+        <span style={{ color: '#f59e0b', fontWeight: 600 }}> Sarı</span> = 2'den az yayınlanmış yazı,
+        yani Google indekslemiyor; istersen silebilirsin, SEO'ya zarar vermez. Renk kaybolunca
+        (2+ yayın) artık indeksleniyor demektir, silme.
       </div>
 
       {/* Arama */}
@@ -69,7 +73,7 @@ export default function TagsAdmin({ tags }: { tags: TagRow[] }) {
       ) : (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
           {filtered.map(t => {
-            const isSingle = t.total === 1
+            const isSingle = t.published < 2
             return (
               <div
                 key={t.slug}
