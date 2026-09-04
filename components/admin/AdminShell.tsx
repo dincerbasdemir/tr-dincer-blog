@@ -30,6 +30,11 @@ const IcoPage = () => (
     <path strokeLinecap="round" strokeLinejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
   </svg>
 )
+const IcoHash = () => (
+  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M7 20l3-16m4 16l3-16M5 9h16M4 15h16" />
+  </svg>
+)
 const IcoNow = () => (
   <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2m6-2a10 10 0 11-20 0 10 10 0 0120 0z" />
@@ -84,6 +89,7 @@ const navGroups = [
   {
     items: [
       { href: '/admin/categories', label: 'Kategoriler', icon: IcoTag },
+      { href: '/admin/etiketler', label: 'Etiketler', icon: IcoHash },
     ],
   },
   {
