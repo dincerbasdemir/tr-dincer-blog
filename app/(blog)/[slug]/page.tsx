@@ -5,6 +5,41 @@ import { tr } from 'date-fns/locale'
 import type { Metadata } from 'next'
 import SubscribeForm from '@/components/SubscribeForm'
 import ViewTracker from '@/components/ViewTracker'
+import RelatedPosts from '@/components/RelatedPosts'
+
+const RELATED_FIELDS = 'id, title, slug, excerpt, published_at, categories, reading_time'
+
+async function getRelatedPosts(currentId: string, categories: string[] | null) {
+  let related: any[] = []
+
+  // Önce aynı kategoriden
+  if (categories && categories.length > 0) {
+    const { data } = await supabase
+      .from('posts')
+      .select(RELATED_FIELDS)
+      .eq('status', 'published')
+      .neq('id', currentId)
+      .contains('categories', [categories[0]])
+      .order('published_at', { ascending: false })
+      .limit(2)
+    related = data || []
+  }
+
+  // Eksikse en yeni diğer yazılarla tamamla
+  if (related.length < 2) {
+    const excludeIds = [currentId, ...related.map(r => r.id)]
+    const { data } = await supabase
+      .from('posts')
+      .select(RELATED_FIELDS)
+      .eq('status', 'published')
+      .not('id', 'in', `(${excludeIds.join(',')})`)
+      .order('published_at', { ascending: false })
+      .limit(2 - related.length)
+    related = [...related, ...(data || [])]
+  }
+
+  return related
+}
 
 async function getPost(slug: string) {
   const { data, error } = await supabase
@@ -51,6 +86,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
   const [post, page, settings] = await Promise.all([getPost(params.slug), getPage(params.slug), getSiteSettings()])
+
+  const relatedPosts = post ? await getRelatedPosts(post.id, post.categories) : []
 
   // Eğer post yoksa ama page varsa, sayfa olarak render et
   if (!post && page) {
@@ -313,6 +350,9 @@ export default async function PostPage({ params }: { params: { slug: string } })
           </div>
           </div>
         )}
+
+        {/* ── İlgili yazılar ── */}
+        <RelatedPosts posts={relatedPosts} />
 
       </article>
     </div>
