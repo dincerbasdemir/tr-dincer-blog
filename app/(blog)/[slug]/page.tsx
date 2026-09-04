@@ -6,6 +6,7 @@ import type { Metadata } from 'next'
 import SubscribeForm from '@/components/SubscribeForm'
 import ViewTracker from '@/components/ViewTracker'
 import RelatedPosts from '@/components/RelatedPosts'
+import { slugify } from '@/lib/slug'
 
 const RELATED_FIELDS = 'id, title, slug, excerpt, published_at, categories, reading_time'
 
@@ -221,12 +222,18 @@ export default async function PostPage({ params }: { params: { slug: string } })
           {post.tags && post.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-10">
               {post.tags.map((tag: string) => (
-                <span key={tag} className="px-3 py-1" style={{ fontSize: '11px', backgroundColor: '#efeded', color: '#5f5e5e', borderRadius: '2px', letterSpacing: '0.05em' }}>
+                <a
+                  key={tag}
+                  href={`/etiket/${slugify(tag)}`}
+                  className="post-tag px-3 py-1"
+                  style={{ fontSize: '11px', backgroundColor: '#efeded', color: '#5f5e5e', borderRadius: '2px', letterSpacing: '0.05em', textDecoration: 'none', transition: 'background-color 0.15s, color 0.15s' }}
+                >
                   #{tag}
-                </span>
+                </a>
               ))}
             </div>
           )}
+          <style>{`.post-tag:hover { background-color: #d00202 !important; color: #ffffff !important; }`}</style>
         </div>
 
         {/* ── İlgili yazılar (yazının hemen altında) ── */}
