@@ -16,7 +16,8 @@ export default function RelatedPosts({ posts }: { posts: RelatedPost[] }) {
   if (!posts || posts.length === 0) return null
 
   return (
-    <div className="px-5 sm:px-16 pb-16 sm:pb-24 pt-4">
+    <div className="px-5 sm:px-16 pb-16 sm:pb-20 pt-12">
+      <div style={{ borderTop: '1px solid rgba(195,198,214,0.35)', marginBottom: '28px' }} />
       <h2 style={{
         fontSize: '13px', fontWeight: 700, letterSpacing: '0.08em',
         textTransform: 'uppercase', color: '#9ca3af', margin: '0 0 20px',

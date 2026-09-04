@@ -229,6 +229,9 @@ export default async function PostPage({ params }: { params: { slug: string } })
           )}
         </div>
 
+        {/* ── İlgili yazılar (yazının hemen altında) ── */}
+        <RelatedPosts posts={relatedPosts} />
+
         {/* ── Abonelik formu (tam genişlik, siyah zemin) ── */}
         <SubscribeForm />
 
@@ -350,9 +353,6 @@ export default async function PostPage({ params }: { params: { slug: string } })
           </div>
           </div>
         )}
-
-        {/* ── İlgili yazılar ── */}
-        <RelatedPosts posts={relatedPosts} />
 
       </article>
     </div>
