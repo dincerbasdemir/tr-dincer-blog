@@ -191,6 +191,7 @@ export default function AudioManager({ initial, initialCover }: { initial: Episo
   }
 
   const [notifyingId, setNotifyingId] = useState<string | null>(null)
+  const [testingId, setTestingId] = useState<string | null>(null)
 
   async function notifySubscribers(ep: Episode) {
     if (!ep.published) { alert('Önce bölümü yayınla.'); return }
@@ -205,6 +206,24 @@ export default function AudioManager({ initial, initialCover }: { initial: Episo
       alert('Hata: ' + (err.message || 'Gönderilemedi.'))
     } finally {
       setNotifyingId(null)
+    }
+  }
+
+  async function sendTest(ep: Episode) {
+    setTestingId(ep.id)
+    try {
+      const res = await fetch(`/api/admin/audio/${ep.id}/notify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ test: true }),
+      })
+      const d = await res.json()
+      if (!res.ok) throw new Error(d.error || 'Gönderilemedi.')
+      alert(`Test maili gönderildi: ${d.to}`)
+    } catch (err: any) {
+      alert('Hata: ' + (err.message || 'Gönderilemedi.'))
+    } finally {
+      setTestingId(null)
     }
   }
 
@@ -380,6 +399,10 @@ export default function AudioManager({ initial, initialCover }: { initial: Episo
                     </div>
                   </div>
                   <div style={{ display: 'flex', gap: '6px', flexShrink: 0, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                    <button onClick={() => sendTest(ep)} disabled={testingId === ep.id}
+                      style={{ ...btn, border: '1px solid #e5e7eb', backgroundColor: '#f9fafb', color: '#374151' }}>
+                      {testingId === ep.id ? 'Gönderiliyor…' : 'Bana Test Gönder'}
+                    </button>
                     <button onClick={() => notifySubscribers(ep)} disabled={notifyingId === ep.id}
                       style={{ ...btn, border: '1px solid #fecaca', backgroundColor: '#fff5f5', color: '#d00202' }}>
                       {notifyingId === ep.id ? 'Gönderiliyor…' : 'Abonelere Gönder'}

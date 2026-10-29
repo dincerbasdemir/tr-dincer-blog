@@ -14,8 +14,12 @@ function absoluteCover(cover?: string | null): string {
 }
 
 // POST /api/admin/audio/[id]/notify — bölümü e-posta abonelerine gönder
-export async function POST(_req: NextRequest, { params }: { params: { id: string } }) {
+// body { test: true } → yalnızca ADMIN_TEST_EMAIL'e gönderir
+export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
   try {
+    const body = await req.json().catch(() => ({}))
+    const isTest = body?.test === true
+
     const supabase = createAdminClient()
 
     const { data: ep } = await supabase
@@ -25,7 +29,7 @@ export async function POST(_req: NextRequest, { params }: { params: { id: string
       .maybeSingle()
 
     if (!ep) return NextResponse.json({ error: 'Bölüm bulunamadı.' }, { status: 404 })
-    if (!ep.published) return NextResponse.json({ error: 'Önce bölümü yayınla.' }, { status: 400 })
+    if (!isTest && !ep.published) return NextResponse.json({ error: 'Önce bölümü yayınla.' }, { status: 400 })
 
     const { data: coverRow } = await supabase
       .from('site_settings')
@@ -33,6 +37,26 @@ export async function POST(_req: NextRequest, { params }: { params: { id: string
       .eq('key', 'podcast_cover')
       .maybeSingle()
     const cover = absoluteCover(coverRow?.value)
+    const listenUrl = `https://tr.dincer.co/ses/${ep.id}`
+
+    // ── Test: sadece ADMIN_TEST_EMAIL'e ──
+    if (isTest) {
+      const to = process.env.ADMIN_TEST_EMAIL
+      if (!to) return NextResponse.json({ error: 'ADMIN_TEST_EMAIL tanımlı değil.' }, { status: 400 })
+      await resend.emails.send({
+        from: 'tr.dincer <bildirim@dincer.co>',
+        to,
+        subject: `[TEST] 🎧 ${ep.title}`,
+        html: buildAudioEmail({
+          title: ep.title,
+          description: ep.description || undefined,
+          coverUrl: cover,
+          listenUrl,
+          unsubscribeToken: 'test',
+        }),
+      })
+      return NextResponse.json({ success: true, test: true, to })
+    }
 
     const { data: subscribers, error } = await supabase
       .from('subscribers')
@@ -42,8 +66,6 @@ export async function POST(_req: NextRequest, { params }: { params: { id: string
     if (!subscribers || subscribers.length === 0) {
       return NextResponse.json({ success: true, sent: 0, message: 'Abone yok.' })
     }
-
-    const listenUrl = `https://tr.dincer.co/ses/${ep.id}`
 
     const results = await Promise.allSettled(
       subscribers.map(sub =>
