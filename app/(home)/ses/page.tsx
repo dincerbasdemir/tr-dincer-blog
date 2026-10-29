@@ -13,8 +13,8 @@ const supabase = createClient(
 )
 
 export const metadata: Metadata = {
-  title: 'Ses — tr.dincer',
-  description: 'Sesli yazılar ve kısa sesli notlar.',
+  title: 'Podcast — tr.dincer',
+  description: 'Yalnız İşler Ofisi — sesli yazılar ve kısa sesli notlar.',
 }
 
 type Episode = {
@@ -49,8 +49,8 @@ export default async function SesPage() {
       <div className="max-w-[925px] mx-auto" style={{ backgroundColor: '#ffffff', marginTop: '10px' }}>
 
         <SharedHero
-          title="Ses"
-          description="Sesli yazılar ve kısa sesli notlar."
+          title="Podcast"
+          description="Yalnız İşler Ofisi"
           activeTab="/ses"
         />
 

@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   if (!ep) return { title: 'Bölüm bulunamadı' }
   const cover = await getCover()
   return {
-    title: `${ep.title} — tr.dincer Ses`,
+    title: `${ep.title} — tr.dincer Podcast`,
     description: ep.description || ep.title,
     openGraph: {
       title: ep.title,
@@ -64,7 +64,7 @@ export default async function EpisodePage({ params }: { params: { id: string } }
     <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
       <div className="max-w-[925px] mx-auto" style={{ backgroundColor: '#ffffff', marginTop: '10px' }}>
 
-        <SharedHero title="Ses" description="Sesli yazılar ve kısa sesli notlar." activeTab="/ses" />
+        <SharedHero title="Podcast" description="Yalnız İşler Ofisi" activeTab="/ses" />
 
         <div className="px-5 pb-20 sm:px-16" style={{ paddingTop: '8px' }}>
           <a href="/ses" style={{ fontSize: '13px', fontWeight: 600, color: '#9ca3af', textDecoration: 'none' }}>

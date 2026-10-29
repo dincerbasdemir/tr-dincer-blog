@@ -82,6 +82,41 @@ export default async function SharedHero({
       <div style={{ display: 'flex', borderBottom: '1px solid #e5e7eb', overflowX: 'auto', WebkitOverflowScrolling: 'touch' as any, scrollbarWidth: 'none' as any }}>
         {tabs.map(tab => {
           const isActive = tab.href === activeTab
+
+          // Vurgulu sekme: kırmızı buton
+          if (tab.highlight) {
+            return (
+              <Link
+                key={tab.href}
+                href={tab.href}
+                className="podcast-tab"
+                style={{
+                  alignSelf: 'center',
+                  margin: '0 8px',
+                  padding: '6px 13px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  backgroundColor: '#d00202',
+                  color: '#ffffff',
+                  borderRadius: '999px',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  letterSpacing: '0.06em',
+                  textTransform: 'uppercase' as const,
+                  textDecoration: 'none',
+                  whiteSpace: 'nowrap',
+                  transition: 'background-color 0.15s',
+                }}
+              >
+                <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 11a7 7 0 01-14 0m7 7v3m0-3a4 4 0 004-4V7a4 4 0 00-8 0v4a4 4 0 004 4z" />
+                </svg>
+                {tab.label}
+              </Link>
+            )
+          }
+
           return (
             <Link
               key={tab.href}
@@ -105,6 +140,8 @@ export default async function SharedHero({
           )
         })}
       </div>
+
+      <style>{`.podcast-tab:hover { background-color: #a30000 !important; }`}</style>
     </div>
   )
 }
