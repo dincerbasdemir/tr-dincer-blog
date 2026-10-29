@@ -10,7 +10,7 @@ export default async function AdminSesPage() {
   const [{ data: episodes }, { data: coverRow }] = await Promise.all([
     supabase
       .from('audio_episodes')
-      .select('id, title, description, audio_path, duration, file_size, post_slug, published, created_at')
+      .select('id, title, description, audio_path, duration, file_size, post_slug, published, plays, created_at')
       .order('created_at', { ascending: false }),
     supabase
       .from('site_settings')

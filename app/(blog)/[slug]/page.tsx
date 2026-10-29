@@ -13,7 +13,7 @@ import { audioPublicUrl } from '@/lib/audio'
 async function getAudioForPost(slug: string) {
   const { data } = await supabase
     .from('audio_episodes')
-    .select('audio_path, duration')
+    .select('id, audio_path, duration')
     .eq('post_slug', slug)
     .eq('published', true)
     .order('created_at', { ascending: false })
@@ -221,7 +221,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
               }}>
                 🎧 Bu yazıyı dinle
               </div>
-              <AudioPlayer src={audioPublicUrl(audioEpisode.audio_path)} duration={audioEpisode.duration} />
+              <AudioPlayer src={audioPublicUrl(audioEpisode.audio_path)} duration={audioEpisode.duration} episodeId={audioEpisode.id} />
             </div>
           )}
 

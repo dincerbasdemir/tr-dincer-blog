@@ -16,6 +16,7 @@ type Episode = {
   file_size: number | null
   post_slug: string | null
   published: boolean
+  plays: number
   created_at: string
 }
 
@@ -189,6 +190,24 @@ export default function AudioManager({ initial, initialCover }: { initial: Episo
     router.refresh()
   }
 
+  const [notifyingId, setNotifyingId] = useState<string | null>(null)
+
+  async function notifySubscribers(ep: Episode) {
+    if (!ep.published) { alert('Önce bölümü yayınla.'); return }
+    if (!confirm(`"${ep.title}" bölümü tüm e-posta abonelerine gönderilsin mi?`)) return
+    setNotifyingId(ep.id)
+    try {
+      const res = await fetch(`/api/admin/audio/${ep.id}/notify`, { method: 'POST' })
+      const d = await res.json()
+      if (!res.ok) throw new Error(d.error || 'Gönderilemedi.')
+      alert(d.sent === 0 ? 'Aktif abone yok.' : `${d.sent} aboneye gönderildi${d.failed ? `, ${d.failed} başarısız` : ''}.`)
+    } catch (err: any) {
+      alert('Hata: ' + (err.message || 'Gönderilemedi.'))
+    } finally {
+      setNotifyingId(null)
+    }
+  }
+
   const btn: React.CSSProperties = {
     fontSize: '12px', fontWeight: 600, padding: '4px 12px',
     borderRadius: '6px', cursor: 'pointer', whiteSpace: 'nowrap',
@@ -356,10 +375,15 @@ export default function AudioManager({ initial, initialCover }: { initial: Episo
                     <div style={{ fontSize: '12px', color: '#9ca3af' }}>
                       {format(new Date(ep.created_at), 'd MMM yyyy', { locale: tr })}
                       {ep.duration ? ` · ${formatDuration(ep.duration)}` : ''}
+                      {` · ▶ ${ep.plays} dinlenme`}
                       {ep.post_slug ? ` · 🔗 ${ep.post_slug}` : ''}
                     </div>
                   </div>
-                  <div style={{ display: 'flex', gap: '6px', flexShrink: 0 }}>
+                  <div style={{ display: 'flex', gap: '6px', flexShrink: 0, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                    <button onClick={() => notifySubscribers(ep)} disabled={notifyingId === ep.id}
+                      style={{ ...btn, border: '1px solid #fecaca', backgroundColor: '#fff5f5', color: '#d00202' }}>
+                      {notifyingId === ep.id ? 'Gönderiliyor…' : 'Abonelere Gönder'}
+                    </button>
                     <button onClick={() => togglePublished(ep)} disabled={busyId === ep.id}
                       style={{ ...btn, border: '1px solid #e5e7eb', backgroundColor: '#fff', color: '#6b7280' }}>
                       {ep.published ? 'Gizle' : 'Yayınla'}

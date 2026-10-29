@@ -6,11 +6,14 @@ import { formatDuration } from '@/lib/audio'
 export default function AudioPlayer({
   src,
   duration,
+  episodeId,
 }: {
   src: string
   duration?: number | null
+  episodeId?: string
 }) {
   const audioRef = useRef<HTMLAudioElement>(null)
+  const countedRef = useRef(false)
   const [playing, setPlaying] = useState(false)
   const [current, setCurrent] = useState(0)
   const [total, setTotal] = useState(duration || 0)
@@ -18,7 +21,20 @@ export default function AudioPlayer({
   useEffect(() => {
     const a = audioRef.current
     if (!a) return
-    const onTime = () => setCurrent(a.currentTime)
+    const onTime = () => {
+      setCurrent(a.currentTime)
+      // 3 saniye dinlenince bir kez say (cihaz başına localStorage, sunucuda IP tekilleştirme)
+      if (!countedRef.current && episodeId && a.currentTime > 3) {
+        countedRef.current = true
+        const key = `played-${episodeId}`
+        let already = false
+        try { already = !!localStorage.getItem(key) } catch {}
+        if (!already) {
+          fetch(`/api/plays/${episodeId}`, { method: 'POST' }).catch(() => {})
+          try { localStorage.setItem(key, '1') } catch {}
+        }
+      }
+    }
     const onMeta = () => setTotal(a.duration)
     const onEnd = () => { setPlaying(false); setCurrent(0) }
     a.addEventListener('timeupdate', onTime)

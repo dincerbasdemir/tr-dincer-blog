@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import SharedHero from '@/components/SharedHero'
 import AudioPlayer from '@/components/AudioPlayer'
+import ShareButtons from '@/components/ShareButtons'
 import { audioPublicUrl, formatDuration, coverUrl } from '@/lib/audio'
 import { format } from 'date-fns'
 import { tr } from 'date-fns/locale'
@@ -64,12 +65,14 @@ export default async function SesPage() {
                 <article key={ep.id} style={{ borderTop: '1px solid #f3f4f6', paddingTop: '28px' }}>
                   {/* Üst: kapak + metin */}
                   <div className="ses-head" style={{ display: 'flex', gap: '18px', marginBottom: '16px' }}>
-                    <img
-                      src={cover}
-                      alt=""
-                      className="ses-cover"
-                      style={{ width: '92px', height: '92px', borderRadius: '12px', objectFit: 'cover', flexShrink: 0, border: '1px solid #f0f0f0' }}
-                    />
+                    <a href={`/ses/${ep.id}`} style={{ flexShrink: 0, lineHeight: 0 }}>
+                      <img
+                        src={cover}
+                        alt=""
+                        className="ses-cover"
+                        style={{ width: '92px', height: '92px', borderRadius: '12px', objectFit: 'cover', border: '1px solid #f0f0f0' }}
+                      />
+                    </a>
                     <div style={{ minWidth: 0 }}>
                       {/* Meta */}
                       <div style={{
@@ -90,9 +93,11 @@ export default async function SesPage() {
                       {/* Başlık */}
                       <h2 style={{
                         fontSize: '21px', lineHeight: '28px', fontWeight: 700,
-                        color: '#111827', letterSpacing: '-0.01em', margin: '0 0 6px',
+                        letterSpacing: '-0.01em', margin: '0 0 6px',
                       }}>
-                        {ep.title}
+                        <a href={`/ses/${ep.id}`} className="ses-title" style={{ color: '#111827', textDecoration: 'none' }}>
+                          {ep.title}
+                        </a>
                       </h2>
 
                       {/* Açıklama */}
@@ -105,23 +110,27 @@ export default async function SesPage() {
                   </div>
 
                   {/* Oynatıcı */}
-                  <AudioPlayer src={audioPublicUrl(ep.audio_path)} duration={ep.duration} />
+                  <AudioPlayer src={audioPublicUrl(ep.audio_path)} duration={ep.duration} episodeId={ep.id} />
 
-                  {/* İlgili yazı linki */}
-                  {ep.post_slug && (
-                    <a href={`/${ep.post_slug}`} style={{
-                      display: 'inline-block', marginTop: '12px',
-                      fontSize: '13px', fontWeight: 600, color: '#d00202', textDecoration: 'none',
-                    }}>
-                      İlgili yazıyı oku →
-                    </a>
-                  )}
+                  {/* Paylaş + ilgili yazı */}
+                  <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px', marginTop: '14px' }}>
+                    <ShareButtons url={`https://tr.dincer.co/ses/${ep.id}`} title={ep.title} />
+                    {ep.post_slug && (
+                      <a href={`/${ep.post_slug}`} style={{
+                        fontSize: '13px', fontWeight: 600, color: '#d00202', textDecoration: 'none',
+                      }}>
+                        İlgili yazıyı oku →
+                      </a>
+                    )}
+                  </div>
                 </article>
               ))}
             </div>
           )}
         </div>
       </div>
+
+      <style>{`.ses-title:hover { color: #d00202 !important; }`}</style>
     </div>
   )
 }
