@@ -6,34 +6,17 @@ import { tr } from 'date-fns/locale'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 
-const categoryMap: { [key: string]: string } = {
-  'gunluk': 'Günlük',
-  'dijital-pazarlama': 'Pazarlama',
-  'genel-kultur': 'Genel Kültür',
-  'tasarim': 'Tasarım',
-  'teknoloji': 'Teknoloji',
-  'yapay-zeka': 'Yapay Zeka',
-  'podcast': 'Podcast',
-  'bilim': 'Bilim',
-  'alintilar': 'Alıntılar',
+// Kategoriyi DB'den slug'a göre bul (tüm kategoriler data-driven çalışır)
+async function getCategory(slug: string): Promise<{ name: string; slug: string } | null> {
+  const { data } = await supabase
+    .from('categories')
+    .select('name, slug')
+    .eq('slug', slug)
+    .maybeSingle()
+  return data
 }
 
-// Gerçek kategori adını DB'de nasıl sakladığımıza göre map
-const categoryDbName: { [key: string]: string } = {
-  'gunluk': 'Günlük',
-  'dijital-pazarlama': 'Dijital Pazarlama',
-  'genel-kultur': 'Genel Kültür',
-  'tasarim': 'Tasarım',
-  'teknoloji': 'Teknoloji',
-  'yapay-zeka': 'Yapay Zeka',
-  'podcast': 'Podcast',
-  'bilim': 'Bilim',
-  'alintilar': 'Alıntılar',
-}
-
-async function getPostsByCategory(categorySlug: string) {
-  const categoryName = categoryDbName[categorySlug]
-  if (!categoryName) return []
+async function getPostsByCategory(categoryName: string) {
   const { data, error } = await supabase
     .from('posts')
     .select('id, title, slug, excerpt, published_at, reading_time, categories')
@@ -45,19 +28,20 @@ async function getPostsByCategory(categorySlug: string) {
 }
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const categoryName = categoryMap[params.slug]
-  if (!categoryName) return { title: 'Kategori bulunamadı' }
+  const category = await getCategory(params.slug)
+  if (!category) return { title: 'Kategori bulunamadı' }
   return {
-    title: `${categoryName} - tr.dincer`,
-    description: `${categoryName} kategorisindeki yazılar`,
+    title: `${category.name} - tr.dincer`,
+    description: `${category.name} kategorisindeki yazılar`,
   }
 }
 
 export default async function CategoryPage({ params }: { params: { slug: string } }) {
-  const posts = await getPostsByCategory(params.slug)
-  const categoryName = categoryMap[params.slug]
+  const category = await getCategory(params.slug)
+  if (!category) notFound()
 
-  if (!categoryName) notFound()
+  const categoryName = category.name
+  const posts = await getPostsByCategory(categoryName)
 
   const activeTab = `/kategori/${params.slug}`
 

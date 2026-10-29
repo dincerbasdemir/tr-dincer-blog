@@ -1,7 +1,8 @@
 import React from 'react'
-import { getSiteSettings } from '@/lib/supabase'
+import { getSiteSettings, supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import { tabs } from '@/lib/tabs'
+import CategoriesDropdown from '@/components/CategoriesDropdown'
 
 const socialIcons: Record<string, JSX.Element> = {
   social_x: <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.741l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.91-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>,
@@ -21,6 +22,15 @@ export default async function SharedHero({
   activeTab?: string
 }) {
   const settings = await getSiteSettings()
+
+  // Dropdown için kategoriler (Podcast kategorisi hariç — üstteki Podcast butonuyla karışmasın)
+  const { data: catData } = await supabase
+    .from('categories')
+    .select('name, slug')
+    .order('name')
+  const categories = (catData || []).filter(c => c.slug !== 'podcast')
+
+  const isCategoryPage = activeTab.startsWith('/kategori/')
 
   const authorName = settings.author_name || 'Dinçer'
   const authorTitle = settings.author_title || 'Dijital Pazarlama Danışmanı'
@@ -139,6 +149,11 @@ export default async function SharedHero({
             </Link>
           )
         })}
+
+        {/* Kategoriler dropdown */}
+        {categories.length > 0 && (
+          <CategoriesDropdown categories={categories} active={isCategoryPage} />
+        )}
       </div>
 
       <style>{`.podcast-tab:hover { background-color: #a30000 !important; }`}</style>
