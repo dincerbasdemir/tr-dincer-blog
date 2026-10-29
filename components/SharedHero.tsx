@@ -89,7 +89,7 @@ export default async function SharedHero({
       )}
 
       {/* Pill buton navigasyonu */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
+      <div className="nav-pills-row" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
         {tabs.map(tab => {
           const isActive = tab.href === activeTab
           const isPodcast = !!tab.highlight
@@ -102,11 +102,11 @@ export default async function SharedHero({
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '5px',
-                padding: '7px 15px',
+                padding: '6px 14px',
                 borderRadius: '999px',
-                fontSize: '12px',
+                fontSize: '11.5px',
                 fontWeight: 700,
-                letterSpacing: '0.04em',
+                letterSpacing: '0.03em',
                 textTransform: 'uppercase' as const,
                 textDecoration: 'none',
                 color: '#ffffff',
@@ -135,6 +135,10 @@ export default async function SharedHero({
       <style>{`
         .nav-pill:hover { opacity: 1 !important; }
         .nav-pill-podcast:hover { background-color: #a30000 !important; }
+        @media (max-width: 600px) {
+          .nav-pills-row { gap: 6px !important; }
+          .nav-pill { padding: 5px 11px !important; font-size: 10.5px !important; letter-spacing: 0.01em !important; gap: 4px !important; }
+        }
       `}</style>
     </div>
   )

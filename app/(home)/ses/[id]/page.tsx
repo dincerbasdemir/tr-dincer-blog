@@ -72,8 +72,8 @@ export default async function EpisodePage({ params }: { params: { id: string } }
           </a>
 
           {/* Üst: kapak + başlık */}
-          <div className="ep-head" style={{ display: 'flex', gap: '22px', margin: '24px 0 24px' }}>
-            <img src={cover} alt="" style={{ width: '132px', height: '132px', borderRadius: '14px', objectFit: 'cover', flexShrink: 0, border: '1px solid #f0f0f0' }} />
+          <div className="ep-head" style={{ display: 'flex', alignItems: 'center', gap: '24px', margin: '24px 0 28px' }}>
+            <img className="ep-cover" src={cover} alt="" style={{ width: '150px', height: '150px', borderRadius: '16px', objectFit: 'cover', flexShrink: 0, border: '1px solid #f0f0f0' }} />
             <div style={{ minWidth: 0 }}>
               <div style={{
                 display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px', marginBottom: '10px',
@@ -82,7 +82,7 @@ export default async function EpisodePage({ params }: { params: { id: string } }
                 <span>{format(new Date(ep.created_at), 'd MMMM yyyy', { locale: tr })}</span>
                 {ep.duration ? (<><span style={{ color: '#d1d5db' }}>•</span><span>{formatDuration(ep.duration)}</span></>) : null}
               </div>
-              <h1 style={{ fontSize: '28px', lineHeight: '36px', fontWeight: 800, color: '#111827', letterSpacing: '-0.02em', margin: 0 }}>
+              <h1 className="ep-title" style={{ fontSize: '28px', lineHeight: '36px', fontWeight: 800, color: '#111827', letterSpacing: '-0.02em', margin: 0 }}>
                 {ep.title}
               </h1>
             </div>
@@ -112,7 +112,13 @@ export default async function EpisodePage({ params }: { params: { id: string } }
         </div>
       </div>
 
-      <style>{`@media (max-width: 560px){ .ep-head img { width: 96px !important; height: 96px !important; } }`}</style>
+      <style>{`
+        @media (max-width: 600px){
+          .ep-head { flex-direction: column; align-items: flex-start; gap: 18px; }
+          .ep-cover { width: 170px !important; height: 170px !important; }
+          .ep-title { font-size: 24px !important; line-height: 31px !important; }
+        }
+      `}</style>
     </div>
   )
 }

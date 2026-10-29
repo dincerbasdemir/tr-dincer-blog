@@ -53,13 +53,14 @@ export default function CategoriesDropdown({
       <button
         ref={btnRef}
         onClick={() => setOpen(o => !o)}
-        className="nav-pill"
+        className="nav-pill cat-pill"
+        aria-label="Kategoriler"
         style={{
-          padding: '7px 15px',
+          padding: '6px 14px',
           borderRadius: '999px',
-          fontSize: '12px',
+          fontSize: '11.5px',
           fontWeight: 700,
-          letterSpacing: '0.04em',
+          letterSpacing: '0.03em',
           textTransform: 'uppercase',
           color: '#ffffff',
           backgroundColor: '#111827',
@@ -73,11 +74,20 @@ export default function CategoriesDropdown({
           transition: 'opacity 0.15s',
         }}
       >
-        Kategoriler
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}
-          style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-        </svg>
+        {/* Masaüstü: metin + chevron */}
+        <span className="cat-label" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+          Kategoriler
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}
+            style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </span>
+        {/* Mobil: hamburger ikonu */}
+        <span className="cat-icon" style={{ display: 'none', alignItems: 'center' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.4}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </span>
       </button>
 
       {open && pos && (
@@ -120,7 +130,14 @@ export default function CategoriesDropdown({
         </div>
       )}
 
-      <style>{`.cat-item:hover { background-color: #f9fafb; color: #d00202; }`}</style>
+      <style>{`
+        .cat-item:hover { background-color: #f9fafb; color: #d00202; }
+        @media (max-width: 600px) {
+          .cat-pill { padding: 5px 9px !important; }
+          .cat-label { display: none !important; }
+          .cat-icon { display: inline-flex !important; }
+        }
+      `}</style>
     </>
   )
 }
