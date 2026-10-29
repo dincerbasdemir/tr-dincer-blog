@@ -5,6 +5,11 @@ export function audioPublicUrl(path: string): string {
   return `${base}/storage/v1/object/public/audio/${path}`
 }
 
+// Podcast kapağı: ayarlanmış kapak varsa onu, yoksa varsayılan SVG'yi döner
+export function coverUrl(cover?: string | null): string {
+  return cover && cover.trim() ? cover : '/podcast-cover.svg'
+}
+
 // Saniyeyi mm:ss formatına çevirir
 export function formatDuration(seconds?: number | null): string {
   if (!seconds || !isFinite(seconds) || seconds < 0) return '0:00'

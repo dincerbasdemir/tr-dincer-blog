@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import SharedHero from '@/components/SharedHero'
 import AudioPlayer from '@/components/AudioPlayer'
-import { audioPublicUrl, formatDuration } from '@/lib/audio'
+import { audioPublicUrl, formatDuration, coverUrl } from '@/lib/audio'
 import { format } from 'date-fns'
 import { tr } from 'date-fns/locale'
 import type { Metadata } from 'next'
@@ -27,13 +27,21 @@ type Episode = {
 }
 
 export default async function SesPage() {
-  const { data: episodes } = await supabase
-    .from('audio_episodes')
-    .select('id, title, description, audio_path, duration, post_slug, created_at')
-    .eq('published', true)
-    .order('created_at', { ascending: false })
+  const [{ data: episodes }, { data: coverRow }] = await Promise.all([
+    supabase
+      .from('audio_episodes')
+      .select('id, title, description, audio_path, duration, post_slug, created_at')
+      .eq('published', true)
+      .order('created_at', { ascending: false }),
+    supabase
+      .from('site_settings')
+      .select('value')
+      .eq('key', 'podcast_cover')
+      .maybeSingle(),
+  ])
 
   const list = (episodes || []) as Episode[]
+  const cover = coverUrl(coverRow?.value)
 
   return (
     <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
@@ -54,36 +62,47 @@ export default async function SesPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '28px', paddingTop: '8px' }}>
               {list.map(ep => (
                 <article key={ep.id} style={{ borderTop: '1px solid #f3f4f6', paddingTop: '28px' }}>
-                  {/* Meta */}
-                  <div style={{
-                    display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px',
-                    marginBottom: '10px',
-                    fontSize: '11px', fontWeight: 700, textTransform: 'uppercase',
-                    letterSpacing: '0.07em', color: '#adb5bd',
-                  }}>
-                    <span>{format(new Date(ep.created_at), 'd MMMM yyyy', { locale: tr })}</span>
-                    {ep.duration ? (
-                      <>
-                        <span style={{ color: '#d1d5db' }}>•</span>
-                        <span>{formatDuration(ep.duration)}</span>
-                      </>
-                    ) : null}
+                  {/* Üst: kapak + metin */}
+                  <div className="ses-head" style={{ display: 'flex', gap: '18px', marginBottom: '16px' }}>
+                    <img
+                      src={cover}
+                      alt=""
+                      className="ses-cover"
+                      style={{ width: '92px', height: '92px', borderRadius: '12px', objectFit: 'cover', flexShrink: 0, border: '1px solid #f0f0f0' }}
+                    />
+                    <div style={{ minWidth: 0 }}>
+                      {/* Meta */}
+                      <div style={{
+                        display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px',
+                        marginBottom: '8px',
+                        fontSize: '11px', fontWeight: 700, textTransform: 'uppercase',
+                        letterSpacing: '0.07em', color: '#adb5bd',
+                      }}>
+                        <span>{format(new Date(ep.created_at), 'd MMMM yyyy', { locale: tr })}</span>
+                        {ep.duration ? (
+                          <>
+                            <span style={{ color: '#d1d5db' }}>•</span>
+                            <span>{formatDuration(ep.duration)}</span>
+                          </>
+                        ) : null}
+                      </div>
+
+                      {/* Başlık */}
+                      <h2 style={{
+                        fontSize: '21px', lineHeight: '28px', fontWeight: 700,
+                        color: '#111827', letterSpacing: '-0.01em', margin: '0 0 6px',
+                      }}>
+                        {ep.title}
+                      </h2>
+
+                      {/* Açıklama */}
+                      {ep.description && (
+                        <p style={{ fontSize: '15px', lineHeight: '23px', color: '#5f5e5e', margin: 0 }}>
+                          {ep.description}
+                        </p>
+                      )}
+                    </div>
                   </div>
-
-                  {/* Başlık */}
-                  <h2 style={{
-                    fontSize: '22px', lineHeight: '30px', fontWeight: 700,
-                    color: '#111827', letterSpacing: '-0.01em', margin: '0 0 8px',
-                  }}>
-                    {ep.title}
-                  </h2>
-
-                  {/* Açıklama */}
-                  {ep.description && (
-                    <p style={{ fontSize: '15px', lineHeight: '24px', color: '#5f5e5e', margin: '0 0 16px' }}>
-                      {ep.description}
-                    </p>
-                  )}
 
                   {/* Oynatıcı */}
                   <AudioPlayer src={audioPublicUrl(ep.audio_path)} duration={ep.duration} />

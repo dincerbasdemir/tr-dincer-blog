@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
-import { formatDuration } from '@/lib/audio'
+import { formatDuration, audioPublicUrl, coverUrl } from '@/lib/audio'
 import { format } from 'date-fns'
 import { tr } from 'date-fns/locale'
 
@@ -36,9 +36,57 @@ const inputStyle: React.CSSProperties = {
   borderRadius: '8px', fontSize: '14px', outline: 'none', boxSizing: 'border-box',
 }
 
-export default function AudioManager({ initial }: { initial: Episode[] }) {
+export default function AudioManager({ initial, initialCover }: { initial: Episode[]; initialCover: string }) {
   const router = useRouter()
   const [episodes, setEpisodes] = useState(initial)
+
+  /* ── Kapak ── */
+  const [cover, setCover] = useState(initialCover)
+  const [coverUploading, setCoverUploading] = useState(false)
+  const [coverMsg, setCoverMsg] = useState('')
+
+  async function handleCoverChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const f = e.target.files?.[0]
+    if (!f) return
+    setCoverUploading(true)
+    setCoverMsg('')
+    try {
+      const r1 = await fetch('/api/admin/audio/upload-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename: `kapak-${f.name}` }),
+      })
+      const d1 = await r1.json()
+      if (!r1.ok) throw new Error(d1.error)
+      const { error: upErr } = await supabase.storage.from('audio').uploadToSignedUrl(d1.path, d1.token, f)
+      if (upErr) throw upErr
+      const url = audioPublicUrl(d1.path)
+      const r2 = await fetch('/api/admin/podcast-cover', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cover: url }),
+      })
+      if (!r2.ok) throw new Error('Kapak kaydedilemedi.')
+      setCover(url)
+      router.refresh()
+    } catch (err: any) {
+      setCoverMsg(err.message || 'Kapak yüklenemedi.')
+    } finally {
+      setCoverUploading(false)
+      e.target.value = ''
+    }
+  }
+
+  async function resetCover() {
+    if (!confirm('Varsayılan kapağa dönülsün mü?')) return
+    await fetch('/api/admin/podcast-cover', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cover: '' }),
+    })
+    setCover('')
+    router.refresh()
+  }
 
   /* ── Yükleme formu ── */
   const [file, setFile] = useState<File | null>(null)
@@ -156,6 +204,46 @@ export default function AudioManager({ initial }: { initial: Episode[] }) {
         <p style={{ fontSize: '13px', color: '#9ca3af', margin: 0 }}>
           {episodes.length} bölüm · <a href="/ses" target="_blank" style={{ color: '#d00202', textDecoration: 'none' }}>/ses sayfasında</a> görünür
         </p>
+      </div>
+
+      {/* Kapak */}
+      <div style={{
+        backgroundColor: '#ffffff', border: '1px solid #f0f0f0',
+        borderRadius: '12px', padding: '20px 24px', marginBottom: '20px',
+        display: 'flex', alignItems: 'center', gap: '18px',
+      }}>
+        <img
+          src={coverUrl(cover)}
+          alt="Podcast kapağı"
+          style={{ width: '84px', height: '84px', borderRadius: '10px', objectFit: 'cover', flexShrink: 0, border: '1px solid #f0f0f0' }}
+        />
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <h2 style={{ fontSize: '15px', fontWeight: 700, color: '#111827', margin: '0 0 2px' }}>
+            Kapak
+          </h2>
+          <p style={{ fontSize: '12px', color: '#9ca3af', margin: '0 0 10px' }}>
+            Tüm bölümlerin yanında görünür. {cover ? 'Kendi kapağın yüklü.' : 'Şu an varsayılan kapak kullanılıyor.'} Kare görsel (ör. 1400×1400) öner.
+          </p>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+            <label style={{
+              fontSize: '12px', fontWeight: 600, padding: '6px 14px', borderRadius: '6px',
+              border: 'none', backgroundColor: '#111827', color: '#fff',
+              cursor: coverUploading ? 'not-allowed' : 'pointer', opacity: coverUploading ? 0.6 : 1,
+            }}>
+              {coverUploading ? 'Yükleniyor…' : (cover ? 'Değiştir' : 'Kapak Yükle')}
+              <input type="file" accept="image/*" onChange={handleCoverChange} disabled={coverUploading} style={{ display: 'none' }} />
+            </label>
+            {cover && (
+              <button onClick={resetCover} type="button" style={{
+                fontSize: '12px', fontWeight: 600, padding: '6px 14px', borderRadius: '6px',
+                border: '1px solid #e5e7eb', backgroundColor: '#f9fafb', color: '#6b7280', cursor: 'pointer',
+              }}>
+                Varsayılana dön
+              </button>
+            )}
+          </div>
+          {coverMsg && <p style={{ fontSize: '12px', color: '#d00202', margin: '8px 0 0' }}>{coverMsg}</p>}
+        </div>
       </div>
 
       {/* Yükleme formu */}
