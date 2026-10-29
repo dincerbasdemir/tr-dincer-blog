@@ -35,6 +35,11 @@ const IcoHash = () => (
     <path strokeLinecap="round" strokeLinejoin="round" d="M7 20l3-16m4 16l3-16M5 9h16M4 15h16" />
   </svg>
 )
+const IcoAudio = () => (
+  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M19 11a7 7 0 01-14 0m7 7v3m0-3a4 4 0 004-4V7a4 4 0 00-8 0v4a4 4 0 004 4z" />
+  </svg>
+)
 const IcoNow = () => (
   <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2m6-2a10 10 0 11-20 0 10 10 0 0120 0z" />
@@ -95,6 +100,7 @@ const navGroups = [
   {
     items: [
       { href: '/admin/mikro', label: 'Mikro', icon: IcoMicro },
+      { href: '/admin/ses', label: 'Ses', icon: IcoAudio },
       { href: '/admin/simdi', label: 'Şu An', icon: IcoNow },
     ],
   },

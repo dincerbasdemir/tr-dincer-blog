@@ -6,5 +6,6 @@ export const tabs = [
   { label: 'Teknoloji', href: '/kategori/teknoloji' },
   { label: 'Yapay Zeka', href: '/kategori/yapay-zeka' },
   { label: 'Mikro', href: '/mikro' },
+  { label: 'Ses', href: '/ses' },
   { label: 'Şu An', href: '/now' },
 ]

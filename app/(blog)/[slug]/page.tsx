@@ -6,7 +6,21 @@ import type { Metadata } from 'next'
 import SubscribeForm from '@/components/SubscribeForm'
 import ViewTracker from '@/components/ViewTracker'
 import RelatedPosts from '@/components/RelatedPosts'
+import AudioPlayer from '@/components/AudioPlayer'
 import { slugify } from '@/lib/slug'
+import { audioPublicUrl } from '@/lib/audio'
+
+async function getAudioForPost(slug: string) {
+  const { data } = await supabase
+    .from('audio_episodes')
+    .select('audio_path, duration')
+    .eq('post_slug', slug)
+    .eq('published', true)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+  return data
+}
 
 const RELATED_FIELDS = 'id, title, slug, excerpt, published_at, categories, reading_time'
 
@@ -89,6 +103,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
   const [post, page, settings] = await Promise.all([getPost(params.slug), getPage(params.slug), getSiteSettings()])
 
   const relatedPosts = post ? await getRelatedPosts(post.id, post.categories) : []
+  const audioEpisode = post ? await getAudioForPost(post.slug) : null
 
   // Eğer post yoksa ama page varsa, sayfa olarak render et
   if (!post && page) {
@@ -196,6 +211,19 @@ export default async function PostPage({ params }: { params: { slug: string } })
               ← Tüm yazılar
             </a>
           </div>
+
+          {/* Bu yazıyı dinle */}
+          {audioEpisode && (
+            <div style={{ marginBottom: '48px' }}>
+              <div style={{
+                fontSize: '11px', fontWeight: 700, textTransform: 'uppercase',
+                letterSpacing: '0.08em', color: '#9ca3af', marginBottom: '10px',
+              }}>
+                🎧 Bu yazıyı dinle
+              </div>
+              <AudioPlayer src={audioPublicUrl(audioEpisode.audio_path)} duration={audioEpisode.duration} />
+            </div>
+          )}
 
           {/* Featured görsel */}
           {post.featured_image && (
