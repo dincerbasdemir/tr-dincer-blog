@@ -114,9 +114,9 @@ export default async function EpisodePage({ params }: { params: { id: string } }
 
       <style>{`
         @media (max-width: 600px){
-          .ep-head { flex-direction: column; align-items: flex-start; gap: 18px; }
-          .ep-cover { width: 170px !important; height: 170px !important; }
-          .ep-title { font-size: 24px !important; line-height: 31px !important; }
+          .ep-head { gap: 16px !important; }
+          .ep-cover { width: 118px !important; height: 118px !important; }
+          .ep-title { font-size: 21px !important; line-height: 27px !important; }
         }
       `}</style>
     </div>
