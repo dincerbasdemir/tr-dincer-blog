@@ -19,6 +19,7 @@ export const metadata: Metadata = {
 
 type Episode = {
   id: string
+  slug: string | null
   title: string
   description: string | null
   audio_path: string
@@ -31,8 +32,9 @@ export default async function SesPage() {
   const [{ data: episodes }, { data: coverRow }] = await Promise.all([
     supabase
       .from('audio_episodes')
-      .select('id, title, description, audio_path, duration, post_slug, created_at')
+      .select('id, slug, title, description, audio_path, duration, post_slug, created_at')
       .eq('published', true)
+      .is('post_slug', null)
       .order('created_at', { ascending: false }),
     supabase
       .from('site_settings')
@@ -65,7 +67,7 @@ export default async function SesPage() {
                 <article key={ep.id} style={{ borderTop: '1px solid #f3f4f6', paddingTop: '28px' }}>
                   {/* Üst: kapak + metin */}
                   <div className="ses-head" style={{ display: 'flex', gap: '18px', marginBottom: '16px' }}>
-                    <a href={`/ses/${ep.id}`} style={{ flexShrink: 0, lineHeight: 0 }}>
+                    <a href={`/ses/${ep.slug || ep.id}`} style={{ flexShrink: 0, lineHeight: 0 }}>
                       <img
                         src={cover}
                         alt=""
@@ -95,7 +97,7 @@ export default async function SesPage() {
                         fontSize: '21px', lineHeight: '28px', fontWeight: 700,
                         letterSpacing: '-0.01em', margin: '0 0 6px',
                       }}>
-                        <a href={`/ses/${ep.id}`} className="ses-title" style={{ color: '#111827', textDecoration: 'none' }}>
+                        <a href={`/ses/${ep.slug || ep.id}`} className="ses-title" style={{ color: '#111827', textDecoration: 'none' }}>
                           {ep.title}
                         </a>
                       </h2>
@@ -114,7 +116,7 @@ export default async function SesPage() {
 
                   {/* Paylaş + ilgili yazı */}
                   <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px', marginTop: '14px' }}>
-                    <ShareButtons url={`https://tr.dincer.co/ses/${ep.id}`} title={ep.title} />
+                    <ShareButtons url={`https://tr.dincer.co/ses/${ep.slug || ep.id}`} title={ep.title} />
                     {ep.post_slug && (
                       <a href={`/${ep.post_slug}`} style={{
                         fontSize: '13px', fontWeight: 600, color: '#d00202', textDecoration: 'none',

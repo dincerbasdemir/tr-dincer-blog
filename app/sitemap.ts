@@ -25,6 +25,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .limit(1)
     .single()
 
+  // Podcast bölümleri (yayınlanmış, yazıya bağlı olmayan)
+  const { data: episodes } = await supabase
+    .from('audio_episodes')
+    .select('slug, created_at, post_slug, published')
+    .eq('published', true)
+    .is('post_slug', null)
+    .order('created_at', { ascending: false })
+
   // Statik sayfalar
   const staticPages: MetadataRoute.Sitemap = [
     {
@@ -39,7 +47,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'daily',
       priority: 0.7,
     },
+    {
+      url: `${baseUrl}/ses`,
+      lastModified: episodes?.[0]?.created_at ? new Date(episodes[0].created_at) : new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    },
   ]
+
+  // Podcast bölüm sayfaları
+  const episodePages: MetadataRoute.Sitemap = (episodes || [])
+    .filter(e => e.slug)
+    .map(e => ({
+      url: `${baseUrl}/ses/${e.slug}`,
+      lastModified: new Date(e.created_at),
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    }))
 
   // Yazı sayfaları
   const postPages: MetadataRoute.Sitemap = (posts || []).map((post) => ({
@@ -77,5 +101,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.5,
     }))
 
-  return [...staticPages, ...postPages, ...pageEntries, ...tagPages]
+  return [...staticPages, ...postPages, ...pageEntries, ...tagPages, ...episodePages]
 }

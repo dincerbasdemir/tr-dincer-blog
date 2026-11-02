@@ -328,7 +328,8 @@ export default function AudioManager({ initial, initialCover }: { initial: Episo
           <input type="text" value={postSlug} onChange={e => setPostSlug(e.target.value)}
             placeholder="ornek-yazi-slug" style={inputStyle} />
           <p style={{ fontSize: '11px', color: '#9ca3af', margin: '6px 0 0' }}>
-            Doldurursan o yazının başında «Bu yazıyı dinle» oynatıcısı çıkar.
+            Doldurursan o yazının başında «Bu yazıyı dinle» oynatıcısı çıkar — ve bu bölüm
+            podcast listesinde görünmez (sadece o yazıya özel olur).
           </p>
         </div>
 

@@ -13,13 +13,18 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY!
 )
 
-async function getEpisode(id: string) {
-  const { data } = await supabase
-    .from('audio_episodes')
-    .select('id, title, description, audio_path, duration, post_slug, created_at, published')
-    .eq('id', id)
-    .maybeSingle()
-  if (!data || !data.published) return null
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+const FIELDS = 'id, slug, title, description, audio_path, duration, post_slug, created_at, published'
+
+// param slug ya da (eski linkler için) uuid olabilir
+async function getEpisode(param: string) {
+  let { data } = await supabase.from('audio_episodes').select(FIELDS).eq('slug', param).maybeSingle()
+  if (!data && UUID_RE.test(param)) {
+    const byId = await supabase.from('audio_episodes').select(FIELDS).eq('id', param).maybeSingle()
+    data = byId.data
+  }
+  // yayınlanmamış veya bir yazıya bağlı (podcast değil) bölümleri gösterme
+  if (!data || !data.published || data.post_slug) return null
   return data
 }
 
@@ -58,7 +63,7 @@ export default async function EpisodePage({ params }: { params: { id: string } }
   const [ep, cover] = await Promise.all([getEpisode(params.id), getCover()])
   if (!ep) notFound()
 
-  const shareUrl = `https://tr.dincer.co/ses/${ep.id}`
+  const shareUrl = `https://tr.dincer.co/ses/${ep.slug || ep.id}`
 
   return (
     <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
