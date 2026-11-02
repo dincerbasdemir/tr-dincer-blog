@@ -212,7 +212,18 @@ export default async function PostPage({ params }: { params: { slug: string } })
             </a>
           </div>
 
-          {/* Bu yazıyı dinle */}
+          {/* Featured görsel */}
+          {post.featured_image && (
+            <div style={{ marginBottom: '48px', lineHeight: 0 }}>
+              <img
+                src={post.featured_image}
+                alt={post.title}
+                style={{ display: 'block', width: '100%', height: 'auto', border: 'none', outline: 'none', borderRadius: 0, boxShadow: 'none', verticalAlign: 'bottom' }}
+              />
+            </div>
+          )}
+
+          {/* Bu yazıyı dinle (görselin altında, içeriğin üstünde) */}
           {audioEpisode && (
             <div style={{ marginBottom: '48px' }}>
               <div style={{
@@ -222,17 +233,6 @@ export default async function PostPage({ params }: { params: { slug: string } })
                 🎧 Bu yazıyı dinle
               </div>
               <AudioPlayer src={audioPublicUrl(audioEpisode.audio_path)} duration={audioEpisode.duration} episodeId={audioEpisode.id} />
-            </div>
-          )}
-
-          {/* Featured görsel */}
-          {post.featured_image && (
-            <div style={{ marginBottom: '56px', lineHeight: 0 }}>
-              <img
-                src={post.featured_image}
-                alt={post.title}
-                style={{ display: 'block', width: '100%', height: 'auto', border: 'none', outline: 'none', borderRadius: 0, boxShadow: 'none', verticalAlign: 'bottom' }}
-              />
             </div>
           )}
 
